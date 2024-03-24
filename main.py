@@ -1,35 +1,48 @@
 #
 import sys
-import serial
-import serial.tools.list_ports
 import random
 import time
-#import pyttsx3
-#from playsound import playsound
+import playsound
+import pyttsx3
 
 from command_IO import  *
-#from Globals    import  *
+from globals    import  *
 #from Sequences  import  *
-#from Sound_out  import  *
+from playsound import playsound
+
+PI_HEAD_COM_PORT = "com3"
+PI_HEAD_BAUD_RATE = 115200
+intro_string = "Hello"
+
+Platform_test = Platform_test
+
+command_IO = command_IO()
+engine = pyttsx3.init()
 
 # ===========================================================================
 # main class
 
 class Pi_the_robot:
-    command_IO = command_IO()
-#    Sound_out  = Sound_out()
 
     def __init__(self, parent=None):
-        ports = list(serial.tools.list_ports.comports())
-        if (len(ports) == 0):
-            print("No serial ports on system")
+        serial_port = PI_HEAD_COM_PORT
+        serial_baud_rate = PI_HEAD_BAUD_RATE
+        voices = engine.getProperty('voices')  # getting details of current voice
+        engine.setProperty('voice', voices[1].id)
+        engine.say(intro_string)
+        engine.runAndWait()
+        status = command_IO.open_port(serial_port, serial_baud_rate)
+        if ( status !=  ErrorCode.OK):
+            print("Fail to open port")
+            time.sleep(3)
             sys.exit()
+
 
 # ===========================================================================
 # Main call
 #
 def main():
-    app = Pi_the_robot()
+    Pi_the_robot()
     print("Hello")
 
 if __name__ == "__main__":

@@ -1,6 +1,7 @@
 # This Python file uses the following encoding: utf-8
 
 import serial
+import random
 import array as arr
 
 from enum import Enum, IntEnum
@@ -179,3 +180,11 @@ class command_IO():
 
         return ErrorCode.OK
 
+# ===========================================================================
+# ping code
+    def ping(self):
+        self.cmd_string = "ping 0 " + str(random.randint(1,98)) + "\n"
+        first_val = 0
+        status =  command_IO.do_command(self.cmd_string, first_val)
+        print(status)
+        return status
