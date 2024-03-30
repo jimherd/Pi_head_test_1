@@ -9,16 +9,8 @@ from Constants  import  *
 from Pi_sound   import  *
 
 # ===========================================================================
-
-    #def __init__(self):
-        # serial_port = Sys_strings.PI_HEAD_COM_PORT
-        # serial_baud_rate = Sys_values.PI_HEAD_BAUD_RATE
-        # voices = engine.getProperty('voices')  # getting details of current voice
-        # engine.setProperty('voice', voices[1].id)
-        # engine.say(Sys_strings.INTRO_STRING)
-        # engine.runAndWait()
         
-def init_sys():
+def init_sys(comport):
     Command_IO.command_IO_init()
     # status = Command_IO.open_port(Sys_strings.PI_HEAD_COM_PORT, Sys_values.PI_HEAD_BAUD_RATE)
     # if ( status !=  Command_IO.close_portErrorCode.OK):

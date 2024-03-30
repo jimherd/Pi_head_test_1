@@ -216,7 +216,7 @@ def run_sequence(sequence_index):
                     wait = True
                 play_TTS_string(sentence, wait)
             case "plays":
-                play_sound_file(os.path.join(sound_dir, cmd_argv[1]))
+                play_sound_file(os.path.join(cmd_argv[1]))
             case "delay":
                 delay = int(cmd_argv[1])
                 time.sleep(delay)
