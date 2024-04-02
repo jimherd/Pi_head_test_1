@@ -23,3 +23,6 @@ def init_sys(comport):
     init_sound_output()
     return Command_IO.ErrorCode.OK
 
+def run_sys():
+    Command_IO.run_sequence(Sys_values.POWER_ON_SEQUENCE)
+

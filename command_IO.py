@@ -20,16 +20,28 @@ MAX_COMMAND_STRING_LENGTH = 100
 MAX_REPLY_STRING_LENGTH = 100
 
 class Joints(IntEnum):
+    LEFT_EYE_LR    = 0
+    LEFT_EYE_UD    = 1
+    LEFT_EYE_LID   = 2
+    LEFT_EYE_BROW  = 3
+    RIGHT_EYE_LR   = 4
+    RIGHT_EYE_UD   = 5
+    RIGHT_EYE_LID  = 6
+    RIGHT_EYE_BROW = 7
+    MOUTH          = 8
 
-    LEFT_EYE_RIGHT_LEFT  = 0
-    LEFT_EYE_UP_DOWN     = 1
-    LEFT_EYE_LID         = 2
-    LEFT_EYE_BROW        = 3
-    RIGHT_EYE_RIGHT_LEFT = 4
-    RIGHT_EYE_UP_DOWN    = 5
-    RIGHT_EYE_LID        = 6
-    RIGHT_EYE_BROW       = 7
-    MOUTH                = 8
+# servo number, servo  type, -ve max, +ve max, init value, min delay, max delay
+servo_data = [  
+    [Joints.LEFT_EYE_LR,    servo_type.SERVO, -25, +25, 0, 0, 250],
+    [Joints.LEFT_EYE_UD,    servo_type.SERVO, -45, +45, 0, 0, 250],
+    [Joints.LEFT_EYE_LID,   servo_type.SERVO, -25, +25, 0, 0, 250],
+    [Joints.LEFT_EYE_BROW,  servo_type.SERVO, -30, +30, 0, 0, 250],
+    [Joints.RIGHT_EYE_LR,   servo_type.SERVO, -25, +25, 0, 0, 250],
+    [Joints.RIGHT_EYE_UD,   servo_type.SERVO, -45, +45, 0, 0, 250],
+    [Joints.RIGHT_EYE_LID,  servo_type.SERVO, -25, +25, 0, 0, 250],
+    [Joints.RIGHT_EYE_BROW, servo_type.SERVO, -30, +30, 0, 0, 250],
+    [Joints.MOUTH,          servo_type.MOTOR, -30, +30, 0, 0, 250],
+]
 
 class Display_commands(IntEnum):
     SET_FORM      = 0
@@ -96,8 +108,6 @@ float_parameter = arr.array('f', repeat(0, MAX_COMMAND_PARAMETERS))
 param_type      = arr.array('i', repeat(0, MAX_COMMAND_PARAMETERS))
 reply_string = ""
 reply_tmp_byte_string = ""
-
-#ser = None
 
 def command_IO_init():
     global ser
@@ -195,6 +205,119 @@ def ping(self):
     cmd_string = "ping 0 " + str(random.randint(1,98)) + "\n"
     first_val = 0
     status =  do_command(self.cmd_string, first_val)
+    print(status)
+    return status
+
+# ===========================================================================
+# servo code
+    def go_servo_cmd(self, joint_code):
+        match joint_code:
+            case Joints.LEFT_EYE_RIGHT_LEFT:
+                servo_position = self.ui.slider_00.value()
+                servo_speed = self.ui.slider_01.value()
+                servo_group = self.ui.checkbox_00.isChecked()
+            case Joints.LEFT_EYE_UP_DOWN:
+                servo_position = self.ui.slider_10.value()
+                servo_speed = self.ui.slider_11.value()
+                servo_group = self.ui.checkbox_10.isChecked()
+            case Joints.LEFT_EYE_LID:
+                servo_position = self.ui.slider_20.value()
+                servo_speed = self.ui.slider_21.value()
+                servo_group = self.ui.checkbox_20.isChecked()
+            case Joints.LEFT_EYE_BROW:
+                servo_position = self.ui.slider_30.value()
+                servo_speed = self.ui.slider_31.value()
+                servo_group = self.ui.checkbox_30.isChecked()
+            case Joints.RIGHT_EYE_RIGHT_LEFT:
+                servo_position = self.ui.slider_40.value()
+                servo_speed = self.ui.slider_41.value()
+                servo_group = self.ui.checkbox_40.isChecked()
+            case Joints.RIGHT_EYE_UP_DOWN:
+                servo_position = self.ui.slider_50.value()
+                servo_speed = self.ui.slider_51.value()
+                servo_group = self.ui.checkbox_50.isChecked()
+            case Joints.RIGHT_EYE_LID:
+                servo_position = self.ui.slider_60.value()
+                servo_speed = self.ui.slider_61.value()
+                servo_group = self.ui.checkbox_60.isChecked()
+            case Joints.RIGHT_EYE_BROW:
+                servo_position = self.ui.slider_70.value()
+                servo_speed = self.ui.slider_71.value()
+                servo_group = self.ui.checkbox_70.isChecked()
+        status = self.Execute_servo_cmd(joint_code, servo_position, servo_speed, servo_group)
+        self.log_status(status)
+
+    def Execute_servo_cmd(self, joint, position, speed, group):
+    # select type of move command
+        if ((group == False) and (speed < SPEED_THRESHOLD)):
+            servo_cmd = ServoCommands.ABS_MOVE
+        elif ((group == True) and (speed < SPEED_THRESHOLD)):
+            servo_cmd = ServoCommands.ABS_MOVE_SYNC
+        elif ((group == False) and (speed >= SPEED_THRESHOLD)):
+            servo_cmd = ServoCommands.SPEED_MOVE
+        else:
+            servo_cmd = ServoCommands.SPEED_MOVE_SYNC
+        # construct appropriate command string
+        if (speed < SPEED_THRESHOLD):
+            self.cmd_string =(f"servo {Sys_values.DEFAULT_PORT} {servo_cmd} {joint} {position}\n")
+        else:
+            self.cmd_string =(f"servo {Sys_values.DEFAULT_PORT} {servo_cmd} {joint} {position} {speed}\n")
+        # log command for debug
+        self.log_message(self.cmd_string)
+    # execute servo move command
+        first_val = 0
+        status =  Command_IO.do_command(self.cmd_string, first_val)
+        print(status)
+        return status
+
+    def Mouth_on_off(mouth_state):
+        if (self.ui.checkbox_80.isChecked() == False):
+            servo_cmd = ServoCommands.ABS_MOVE
+        else:
+            servo_cmd = ServoCommands.ABS_MOVE_SYNC
+
+        if (mouth_state == OFF):
+            self.cmd_string = (f"servo {Sys_valuesDEFAULT_PORT} {servo_cmd} 8 45\n")   # turn ON
+            self.ui.button_80.setText("Stop")
+            self.mouth_state = ON
+        else:
+            self.cmd_string = (f"servo {Sys_values.DEFAULT_PORT} {servo_cmd} 8 0\n")   # turn OFF
+            self.ui.button_80.setText("Start")
+            self.mouth_state = OFF
+
+        # execute servo move command
+        first_val = 0
+        status =  Command_IO.do_command(self.cmd_string, first_val)
+        print(status)
+        return status
+
+# ===========================================================================
+# Stepper motor code
+
+def execute_stepper_cmd(self, stepper_no, stepper_cmd, stepper_speed_profile, stepper_step_value):
+    self.cmd_string =(f"stepper {Sys_values.DEFAULT_PORT} {stepper_cmd} {stepper_no} {stepper_step_value}\n")
+    self.log_message(self.cmd_string)
+    first_val = 0
+    status =  Command_IO.do_command(self.cmd_string, first_val)
+    print(status)
+    return status
+
+# ===========================================================================
+# Display code
+
+def page_update(self):
+    first_val = 0
+    status =  Command_IO.do_command(self.cmd_string, first_val)
+    print(status)
+    return status
+
+def string_update(self):
+    pass
+
+def read_button(button_index):
+    cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.READ_BUTTON} {button_index}\n")
+    first_val = 0
+    status =  Command_IO.do_command(cmd_string, first_val)
     print(status)
     return status
 
