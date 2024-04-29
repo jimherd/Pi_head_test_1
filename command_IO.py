@@ -9,7 +9,9 @@ import array as arr
 from enum import Enum, IntEnum
 from itertools import repeat
 
+import Pi_the_robot
 import Globals
+from Constants import *
 import Command_IO
 from Pi_sound import *
 from Sequences import sequences
@@ -29,6 +31,13 @@ class Joints(IntEnum):
     RIGHT_EYE_LID  = 6
     RIGHT_EYE_BROW = 7
     MOUTH          = 8
+
+FIRST_JOINT = Joints.LEFT_EYE_LR
+LAST_JOINT  = Joints.RIGHT_EYE_BROW
+
+class Mouth(IntEnum):
+    OFF  = 0
+    ON   = 1
 
 # servo number, servo  type, -ve max, +ve max, init value, min delay, max delay
 servo_data = [  
@@ -50,26 +59,40 @@ class Display_commands(IntEnum):
     READ_BUTTON   = 3
 
 class ErrorCode(IntEnum):
-    OK                              = 0
-    LETTER_ERROR                    = -100    # rp2040 microcontroller errors
-    DOT_ERROR                       = -101
-    PLUSMINUS_ERROR                 = -102
-    BAD_COMMAND                     = -103
-    BAD_PORT_NUMBER                 = -104
-    BAD_NOS_PARAMETERS              = -105
-    BAD_BASE_PARAMETER              = -106
-    PARAMETER_OUTWITH_LIMITS        = -107
-    BAD_SERVO_COMMAND               = -108
-    STEPPER_CALIBRATE_FAIL          = -109
-    BAD_STEPPER_COMMAND             = -110
-    BAD_STEP_VALUE                  = -111
-    MOVE_ON_UNCALIBRATED_MOTOR      = -112
-    EXISTING_FAULT_WITH_MOTOR       = -113
-    SM_MOVE_TOO_SMALL               = -114
-    LIMIT_SWITCH_ERROR              = -115
-    UNKNOWN_STEPPER_MOTOR_STATE     = -116
-    STEPPER_BUSY                    = -117
-    SERVO_BUSY                      = -118
+    OK                               = 0,
+    LETTER_ERROR                     = -100,   # rp2040 generated errors
+    DOT_ERROR                        = -101,
+    PLUSMINUS_ERROR                  = -102,
+    BAD_COMMAND                      = -103,
+    BAD_PORT_NUMBER                  = -104,
+    BAD_NOS_PARAMETERS               = -105,
+    BAD_BASE_PARAMETER               = -106,
+    PARAMETER_OUTWITH_LIMITS         = -107,
+    BAD_SERVO_COMMAND                = -108,
+    STEPPER_CALIBRATE_FAIL           = -109,
+    BAD_STEPPER_COMMAND              = -110,
+    BAD_STEP_VALUE                   = -111,
+    MOVE_ON_UNCALIBRATED_MOTOR       = -112,
+    EXISTING_FAULT_WITH_MOTOR        = -113,
+    SM_MOVE_TOO_SMALL                = -114,
+    LIMIT_SWITCH_ERROR               = -115,
+    UNKNOWN_STEPPER_MOTOR_STATE      = -116,
+    STEPPER_BUSY                     = -117,
+    SERVO_BUSY                       = -118,
+    GEN4_uLCD_NOT_DETECTED           = -119,
+    GEN4_uLCD_WRITE_OBJ_FAIL         = -120,
+    GEN4_uLCD_WRITE_OBJ_TIMEOUT      = -121,
+    GEN4_uLCD_WRITE_CONTRAST_FAIL    = -122,
+    GEN4_uLCD_WRITE_CONTRAST_TIMEOUT = -123,   
+    GEN4_uLCD_READ_OBJ_FAIL          = -124,
+    GEN4_uLCD_READ_OBJ_TIMEOUT       = -125,
+    GEN4_uLCD_CMD_BAD_FORM_INDEX     = -126,
+    GEN4_uLCD_WRITE_STR_TOO_BIG      = -127,
+    GEN4_uLCD_WRITE_STRING_FAIL      = -128,
+    GEN4_uLCD_WRITE_STRING_TIMEOUT   = -129,
+    GEN4_uLCD_BUTTON_FORM_INACTIVE   = -130,
+    QUOTE_ERROR                      = -131,
+    
 
     BAD_COMPORT_OPEN                = -200     # PC/Pi errors
     UNKNOWN_COM_PORT                = -201
@@ -78,6 +101,9 @@ class ErrorCode(IntEnum):
     NULL_EMPTY_STRING               = -204
     BAD_COMPORT_CLOSE               = -205
     BAD_STRING_PARSE                = -206
+    BAD_JOINT_CODE                  = -207,
+    BAD_SERVO_POSITION              = -208,
+    BAD_SPEED_VALUE                 = -209,
 
 class Modes(IntEnum):
     MODE_U = 0
@@ -124,7 +150,7 @@ def open_port(port, baud_rate):
     ser.timeout = 5
     try:
         ser.open()
-    except:
+    except serial.SerialException as var : # var contains details of issue:
         return ErrorCode.BAD_COMPORT_OPEN
     ser.flushInput()
     ser.timeout = 5
@@ -169,7 +195,7 @@ def Parse_string(string_data):
     # break string into a list of strings
     string_parameters = string_data.split()
     argc = len(string_parameters)
-    print(reply_string)
+    Pi_the_robot.sys_print(reply_string)
 
     for index in range(argc):
         flag = True
@@ -190,125 +216,98 @@ def Parse_string(string_data):
         if (flag == True):
             int_parameter[index] = float(string_parameters[index])
             param_type[index] = Modes.MODE_R
-            print("float detected")
+            Pi_the_robot.sys_print("float detected")
             continue
 
         param_type[index] = Modes.MODE_S
-        print(int_parameter)
+        Pi_the_robot.sys_print(int_parameter)
 
     return ErrorCode.OK
 
 # ===========================================================================
 # ping code
 
-def ping(self):
+def ping():
     cmd_string = "ping 0 " + str(random.randint(1,98)) + "\n"
     first_val = 0
-    status =  do_command(self.cmd_string, first_val)
-    print(status)
+    status =  do_command(cmd_string, first_val)
+    Pi_the_robot.sys_print(status)
     return status
 
 # ===========================================================================
 # servo code
-    def go_servo_cmd(self, joint_code):
-        match joint_code:
-            case Joints.LEFT_EYE_RIGHT_LEFT:
-                servo_position = self.ui.slider_00.value()
-                servo_speed = self.ui.slider_01.value()
-                servo_group = self.ui.checkbox_00.isChecked()
-            case Joints.LEFT_EYE_UP_DOWN:
-                servo_position = self.ui.slider_10.value()
-                servo_speed = self.ui.slider_11.value()
-                servo_group = self.ui.checkbox_10.isChecked()
-            case Joints.LEFT_EYE_LID:
-                servo_position = self.ui.slider_20.value()
-                servo_speed = self.ui.slider_21.value()
-                servo_group = self.ui.checkbox_20.isChecked()
-            case Joints.LEFT_EYE_BROW:
-                servo_position = self.ui.slider_30.value()
-                servo_speed = self.ui.slider_31.value()
-                servo_group = self.ui.checkbox_30.isChecked()
-            case Joints.RIGHT_EYE_RIGHT_LEFT:
-                servo_position = self.ui.slider_40.value()
-                servo_speed = self.ui.slider_41.value()
-                servo_group = self.ui.checkbox_40.isChecked()
-            case Joints.RIGHT_EYE_UP_DOWN:
-                servo_position = self.ui.slider_50.value()
-                servo_speed = self.ui.slider_51.value()
-                servo_group = self.ui.checkbox_50.isChecked()
-            case Joints.RIGHT_EYE_LID:
-                servo_position = self.ui.slider_60.value()
-                servo_speed = self.ui.slider_61.value()
-                servo_group = self.ui.checkbox_60.isChecked()
-            case Joints.RIGHT_EYE_BROW:
-                servo_position = self.ui.slider_70.value()
-                servo_speed = self.ui.slider_71.value()
-                servo_group = self.ui.checkbox_70.isChecked()
-        status = self.Execute_servo_cmd(joint_code, servo_position, servo_speed, servo_group)
-        self.log_status(status)
 
-    def Execute_servo_cmd(self, joint, position, speed, group):
-    # select type of move command
-        if ((group == False) and (speed < SPEED_THRESHOLD)):
-            servo_cmd = ServoCommands.ABS_MOVE
-        elif ((group == True) and (speed < SPEED_THRESHOLD)):
-            servo_cmd = ServoCommands.ABS_MOVE_SYNC
-        elif ((group == False) and (speed >= SPEED_THRESHOLD)):
-            servo_cmd = ServoCommands.SPEED_MOVE
-        else:
-            servo_cmd = ServoCommands.SPEED_MOVE_SYNC
-        # construct appropriate command string
-        if (speed < SPEED_THRESHOLD):
-            self.cmd_string =(f"servo {Sys_values.DEFAULT_PORT} {servo_cmd} {joint} {position}\n")
-        else:
-            self.cmd_string =(f"servo {Sys_values.DEFAULT_PORT} {servo_cmd} {joint} {position} {speed}\n")
-        # log command for debug
-        self.log_message(self.cmd_string)
+def Execute_servo_cmd(joint, position, speed, group):
+    status = check_joint_data(joint, position, speed)
+    if (status != ErrorCode.OK):
+        return status
+# select type of move command
+    if ((group == False) and (speed < Sys_values.SPEED_THRESHOLD)):
+        servo_cmd = ServoCommands.ABS_MOVE
+    elif ((group == True) and (speed < Sys_values.SPEED_THRESHOLD)):
+        servo_cmd = ServoCommands.ABS_MOVE_SYNC
+    elif ((group == False) and (speed >= Sys_values.SPEED_THRESHOLD)):
+        servo_cmd = ServoCommands.SPEED_MOVE
+    else:
+        servo_cmd = ServoCommands.SPEED_MOVE_SYNC
+    # construct appropriate command string
+    if (speed < Sys_values.SPEED_THRESHOLD):
+        cmd_string =(f"servo {Sys_values.DEFAULT_PORT} {servo_cmd} {joint} {position}\n")
+    else:
+        cmd_string =(f"servo {Sys_values.DEFAULT_PORT} {servo_cmd} {joint} {position} {speed}\n")
+# execute servo move command
+    first_val = 0
+    status =  Command_IO.do_command(cmd_string, first_val)
+    Pi_the_robot.sys_print(status)
+    return status
+
+def Mouth_on_off(mouthstate, group):
+    if (group == False):
+        servo_cmd = ServoCommands.ABS_MOVE
+    else:
+        servo_cmd = ServoCommands.ABS_MOVE_SYNC
+
+    if (mouth_state == Mouth.OFF):
+        cmd_string = (f"servo {Sys_values.DEFAULT_PORT} {servo_cmd} 8 45\n")   # turn ON
+        mouth_state = Mouth.ON
+    else:
+        cmd_string = (f"servo {Sys_values.DEFAULT_PORT} {servo_cmd} 8 0\n")   # turn OFF
+        mouth_state = Mouth.OFF
+
     # execute servo move command
-        first_val = 0
-        status =  Command_IO.do_command(self.cmd_string, first_val)
-        print(status)
-        return status
+    first_val = 0
+    status =  Command_IO.do_command(cmd_string, first_val)
+    Pi_the_robot.sys_print(status)
+    return status
 
-    def Mouth_on_off(mouth_state):
-        if (self.ui.checkbox_80.isChecked() == False):
-            servo_cmd = ServoCommands.ABS_MOVE
-        else:
-            servo_cmd = ServoCommands.ABS_MOVE_SYNC
-
-        if (mouth_state == OFF):
-            self.cmd_string = (f"servo {Sys_valuesDEFAULT_PORT} {servo_cmd} 8 45\n")   # turn ON
-            self.ui.button_80.setText("Stop")
-            self.mouth_state = ON
-        else:
-            self.cmd_string = (f"servo {Sys_values.DEFAULT_PORT} {servo_cmd} 8 0\n")   # turn OFF
-            self.ui.button_80.setText("Start")
-            self.mouth_state = OFF
-
-        # execute servo move command
-        first_val = 0
-        status =  Command_IO.do_command(self.cmd_string, first_val)
-        print(status)
-        return status
+def check_joint_data(joint, position, speed):
+    if ((joint < FIRST_JOINT) or (joint > LAST_JOINT)):
+        return ErrorCode.BAD_JOINT_CODE
+    if ((position < servo_data[joint][2]) or (position > servo_data[joint][3])):
+        return ErrorCode.BAD_SERVO_POSITION
+    if ((position < servo_data[joint][4]) or (position > servo_data[joint][5])):
+        return ErrorCode.BAD_SPEED_VALUE
+    return ErrorCode.OK
+    
 
 # ===========================================================================
 # Stepper motor code
 
-def execute_stepper_cmd(self, stepper_no, stepper_cmd, stepper_speed_profile, stepper_step_value):
-    self.cmd_string =(f"stepper {Sys_values.DEFAULT_PORT} {stepper_cmd} {stepper_no} {stepper_step_value}\n")
-    self.log_message(self.cmd_string)
+def execute_stepper_cmd(stepper_no, stepper_cmd, stepper_speed_profile, stepper_step_value):
+    cmd_string =(f"stepper {Sys_values.DEFAULT_PORT} {stepper_cmd} {stepper_no} {stepper_step_value}\n")
     first_val = 0
-    status =  Command_IO.do_command(self.cmd_string, first_val)
-    print(status)
+    status =  Command_IO.do_command(cmd_string, first_val)
+    Pi_the_robot.sys_print(status)
     return status
 
 # ===========================================================================
 # Display code
 
-def page_update(self):
+def page_update(page_index):
+    cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.SET_FORM} {page_index}\n")
     first_val = 0
-    status =  Command_IO.do_command(self.cmd_string, first_val)
-    print(status)
+    status =  Command_IO.do_command(cmd_string, first_val)
+    Pi_the_robot.sys_print(status)
     return status
 
 def string_update(self):
@@ -318,7 +317,7 @@ def read_button(button_index):
     cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.READ_BUTTON} {button_index}\n")
     first_val = 0
     status =  Command_IO.do_command(cmd_string, first_val)
-    print(status)
+    Pi_the_robot.sys_print(status)
     return status
 
 # ===========================================================================

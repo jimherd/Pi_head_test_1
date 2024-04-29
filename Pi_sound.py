@@ -15,10 +15,9 @@ from Globals    import  *
 from Constants  import  *
 
 __sound_dir = ""
+__engine = pyttsx3.init()
 
 def init_sound_output():
-    global __engine 
-    __engine = pyttsx3.init()
     voices = __engine.getProperty('voices')  # getting details of current voice
     __engine.setProperty('voice', voices[1].id)
     __sound_dir = os.path.join(os.getcwd(), "Media", "Sounds")

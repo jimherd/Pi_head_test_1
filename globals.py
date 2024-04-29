@@ -3,12 +3,11 @@
 # note :  ._name is the convention to indicate non-public attributes
 
 import platform
+
+from Constants    import  *
+
 from enum import Enum, IntEnum
 
-class This_platform(IntEnum):
-    UNKNOWN    = 0
-    WINDOWS    = 1
-    LINUX      = 2
 
 class Platform_test():
     def __init__(self):
