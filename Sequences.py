@@ -13,9 +13,11 @@ sequences = [
     [ # Sequence 0 -  Power-on
         "ping 9 40",
         "servo 9 0 8 45",              # mouth ON
-        "speak 1 Welcome to the Pi the robot system",
+        "speak t w Welcome to the Pi the robot system",
         "delay 1",
         "servo 9 0 8 0",              # mouth OFF
+        "speak f w intro.txt",
+
     ],
     [ # Sequence 1
     #    "ping 9 42",

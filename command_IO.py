@@ -104,6 +104,7 @@ class ErrorCode(IntEnum):
     BAD_JOINT_CODE                  = -207,
     BAD_SERVO_POSITION              = -208,
     BAD_SPEED_VALUE                 = -209,
+    TEXTFILE_NOT_FOUND              = -210,
 
 class Modes(IntEnum):
     MODE_U = 0
@@ -331,11 +332,24 @@ def run_sequence(sequence_index):
         cmd_argv = sequences[sequence_index][i].split()
         match cmd_argv[0]:
             case "speak":
-                say_list = cmd_argv[2:]
+                say_list = cmd_argv[3:]
                 sentence = " ".join(say_list)
                 wait = False
-                if (int(cmd_argv[1]) == 1):
+                if (cmd_argv[2] == "w"):
                     wait = True
+                if (cmd_argv[1] == "f"):
+                    try:
+                        file = open(cmd_argv[3], 'r')
+                    except FileNotFoundError:
+                        print('This file doesn\'t exist')
+                        return ErrorCode.TEXTFILE_NOT_FOUND
+                    while True:
+                        text_line = file.readline()
+                        if not text_line:
+                            break
+                        play_TTS_string(text_line, wait)
+                    file.close()
+                    return ErrorCode.OK
                 play_TTS_string(sentence, wait)
             case "plays":
                 play_sound_file(os.path.join(cmd_argv[1]))
