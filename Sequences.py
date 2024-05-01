@@ -16,7 +16,11 @@ sequences = [
         "speak t w Welcome to the Pi the robot system",
         "delay 1",
         "servo 9 0 8 0",              # mouth OFF
+        "delay 3",
+        "servo 9 0 8 45",              # mouth ON
         "speak f w intro.txt",
+        "delay 3",
+        "servo 9 0 8 0",              # mouth OFF
 
     ],
     [ # Sequence 1

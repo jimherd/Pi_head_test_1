@@ -7,6 +7,7 @@
 #        __sound_dir   module
 
 import os
+import time
 import pyttsx3
 
 from playsound  import  *
@@ -29,4 +30,8 @@ def play_TTS_string(sentence, wait):
     __engine.say(sentence)
     if (wait == True):
         __engine.runAndWait()
+
+def TTS_wait_finish():
+    while (__engine.isBusy == True):
+        time.sleep(0.1)
 

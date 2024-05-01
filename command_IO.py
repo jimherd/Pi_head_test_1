@@ -348,6 +348,7 @@ def run_sequence(sequence_index):
                         if not text_line:
                             break
                         play_TTS_string(text_line, wait)
+                        TTS_wait_finish()
                     file.close()
                     return ErrorCode.OK
                 play_TTS_string(sentence, wait)
