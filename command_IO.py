@@ -350,8 +350,8 @@ def run_sequence(sequence_index):
                         play_TTS_string(text_line, wait)
                         TTS_wait_finish()
                     file.close()
-                    return ErrorCode.OK
-                play_TTS_string(sentence, wait)
+                else:
+                    play_TTS_string(sentence, wait)
             case "plays":
                 play_sound_file(os.path.join(cmd_argv[1]))
             case "delay":

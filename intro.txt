@@ -3,6 +3,3 @@ This is an introduction
 
 The robot head contains a number of servo motors
  to mimic parts of a real head.
-
- Beat it
- 

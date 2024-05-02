@@ -19,7 +19,6 @@ sequences = [
         "delay 3",
         "servo 9 0 8 45",              # mouth ON
         "speak f w intro.txt",
-        "delay 3",
         "servo 9 0 8 0",              # mouth OFF
 
     ],
