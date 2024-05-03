@@ -323,64 +323,14 @@ def read_button(button_index):
     return status
 
 # ===========================================================================
-# run sequences of commands from a text file
+# run sequences of commands from a list
 #
 # check for local commands (speak, ...) before sending remote command
 # to the rp2040 MCU that controls the robot head hardware
 
-def run_file_sequence(filename):
-    try:
-        cmd_file = open(filename, 'r')
-    except FileNotFoundError:
-        print('This file does not exist')
-        return ErrorCode.COMMAND_FILE_NOT_FOUND
-    while True:
-        cmd_line = cmd_file.readline()
-        if not cmd_line:
-            break       # Command sequence complete
-        cmd_argv = cmd_line.split()
-# execute command
-        match cmd_argv[0]:
-            case "speak":
-                say_list = cmd_argv[3:]
-                sentence = " ".join(say_list)
-                wait = False
-                if (cmd_argv[2] == "w"):
-                    wait = True
-                if (cmd_argv[1] == "f"):
-                    try:
-                        file = open(cmd_argv[3], 'r')
-                    except FileNotFoundError:
-                        print('This file doesn\'t exist')
-                        return ErrorCode.TEXTFILE_NOT_FOUND
-                    while True:
-                        text_line = file.readline()
-                        if not text_line:
-                            break
-                        play_TTS_string(text_line, wait)
-                        TTS_wait_finish()
-                    file.close()
-                else:
-                    play_TTS_string(sentence, wait)
-            case "plays":
-                play_sound_file(os.path.join(cmd_argv[1]))
-            case "delay":
-                delay = int(cmd_argv[1])
-                time.sleep(delay)
-            case _:          # must be a remote command
-                first_val = 0
-                cmd_string = cmd_line + "\n"  #   (f"{sequences[sequence_index][i]}\n")
-                status =  Command_IO.do_command(cmd_string, first_val)
-                if (status != ErrorCode.OK):
-                    return status
-# exit
-    cmd_file.close()
-    return ErrorCode.OK
-
-
-def run_sequence(sequence_index):
-    for i in range(len(sequences[sequence_index])):
-        cmd_argv = sequences[sequence_index][i].split()
+def run_sequence(sequence) -> ErrorCode:
+    for i in range(len(sequence)):
+        cmd_argv = sequence[i].split()
 
 # execute command
         match cmd_argv[0]:
@@ -412,10 +362,25 @@ def run_sequence(sequence_index):
                 time.sleep(delay)
             case _:          # must be a remote command
                 first_val = 0
-                cmd_string = sequences[sequence_index][i] + "\n"  #   (f"{sequences[sequence_index][i]}\n")
+                cmd_string = sequence[i] + "\n"  #   (f"{sequences[sequence_index][i]}\n")
                 status =  Command_IO.do_command(cmd_string, first_val)
                 if (status != ErrorCode.OK):
                     return status
  # exit               
     return ErrorCode.OK
 
+# ===========================================================================
+# run sequences of commands from a text file
+#
+
+def run_file_sequence(filename) -> ErrorCode:
+    try:
+        text_data = open(filename, 'r')
+    except FileNotFoundError:
+        print('This file does not exist')
+        return ErrorCode.COMMAND_FILE_NOT_FOUND
+    data = text_data.read()        # read raw text data from text file
+    cmd_list = data.split("\n")    # convert to list of commands
+    text_data.close() 
+
+    status = run_sequence(cmd_list)

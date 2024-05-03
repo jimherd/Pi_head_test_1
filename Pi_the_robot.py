@@ -7,6 +7,7 @@ import Command_IO
 from Globals    import  *
 from Constants  import  *
 from Pi_sound   import  *
+from Sequences  import  *
 
 # ===========================================================================
         
@@ -33,5 +34,5 @@ def sys_print(*args):
         print(args_str)
 
 def run_sys():
-    Command_IO.run_sequence(Sys_values.POWER_ON_SEQUENCE)
+    Command_IO.run_sequence(sequence0)
 
