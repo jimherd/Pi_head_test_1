@@ -1,0 +1,9 @@
+ping 9 40
+servo 9 0 8 45
+speak t w Set of commands from a text file
+delay 1
+servo 9 0 8 0
+delay 3
+servo 9 0 8 45
+speak f w intro.txt
+servo 9 0 8 0

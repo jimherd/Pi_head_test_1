@@ -34,5 +34,5 @@ def sys_print(*args):
         print(args_str)
 
 def run_sys():
-    Command_IO.run_sequence(sequence0)
+    Command_IO.run_file_sequence("seq0.txt")
 

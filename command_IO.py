@@ -14,7 +14,7 @@ import Globals
 from Constants import *
 import Command_IO
 from Pi_sound import *
-from Sequences import sequences
+from Sequences import *
 
 MAX_COMMAND_PARAMETERS = 10
 READ_TIMEOUT = 4  # seconds
