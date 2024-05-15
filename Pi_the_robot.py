@@ -34,7 +34,7 @@ def sys_print(*args) -> None:
         print(args_str)
 
 def run_sys() -> None:
-    Command_IO.run_file_sequence("seq0.txt")
+#    Command_IO.run_file_sequence("seq0.txt")
     Command_IO.run_file_sequence("blink.txt")
     Command_IO.run_file_sequence("wink.txt")
 

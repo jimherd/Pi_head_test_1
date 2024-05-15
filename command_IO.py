@@ -344,7 +344,7 @@ def run_sequence(sequence) -> ErrorCode:
                     try:
                         file = open(cmd_argv[3], 'r')
                     except FileNotFoundError:
-                        print('This file doesn\'t exist')
+                        print('This file does not exist')
                         return ErrorCode.TEXTFILE_NOT_FOUND
                     while True:
                         text_line = file.readline()
@@ -362,7 +362,8 @@ def run_sequence(sequence) -> ErrorCode:
                 time.sleep(delay)
             case _:          # must be a remote command
                 first_val = 0
-                cmd_string = sequence[i] + "\n"  #   (f"{sequences[sequence_index][i]}\n")
+                cmd_string = sequence[i]  + '\n'  #   (f"{sequences[sequence_index][i]}\n")
+                Pi_the_robot.sys_print("cmd =", cmd_string)
                 status =  Command_IO.do_command(cmd_string, first_val)
                 if (status != ErrorCode.OK):
                     return status
@@ -377,10 +378,12 @@ def run_file_sequence(filename: str) -> ErrorCode:
     try:
         text_data = open(filename, 'r')
     except FileNotFoundError:
-        print('This file does not exist')
+        print(f'Cannot open file {filename}')
         return ErrorCode.COMMAND_FILE_NOT_FOUND
-    data = text_data.read()        # read raw text data from text file
-    cmd_list = data.split("\n")    # convert to list of commands
+    data = text_data.read()            # read raw text data from text file
+    cmd_list = data.splitlines(False)  # convert to list of commands and 
+                                       # delete line separators
     text_data.close() 
 
     status = run_sequence(cmd_list)
+    Pi_the_robot.sys_print("sequence : ", filename, " status = ", status)
