@@ -1,5 +1,5 @@
-This is an introduction
- to Pi the robot
+This is an introduction to Pi the robot.
 
-The robot head contains a number of servo motors
- to mimic parts of a real head.
+The robot head contains a number of servo motors to mimic parts of a real head.
+
+Would you like to know more?

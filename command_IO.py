@@ -130,14 +130,14 @@ class StepperCommands(IntEnum):
     ABS_MOVE_SYNC      = 3
     CALIBRATE          = 4
 
-argc = 0
+argc: int = 0
 int_parameter   = arr.array('i', repeat(0, MAX_COMMAND_PARAMETERS))
 float_parameter = arr.array('f', repeat(0, MAX_COMMAND_PARAMETERS))
 param_type      = arr.array('i', repeat(0, MAX_COMMAND_PARAMETERS))
-reply_string = ""
-reply_tmp_byte_string = ""
+reply_string: str = ""
+reply_tmp_byte_string: str = ""
 
-def command_IO_init():
+def command_IO_init() -> None:
     global ser
     ser = serial.Serial()
     argc = 0
@@ -145,7 +145,7 @@ def command_IO_init():
     float_parameter = arr.array('f', repeat(0, MAX_COMMAND_PARAMETERS))
     param_type      = arr.array('i', repeat(0, MAX_COMMAND_PARAMETERS))
 
-def open_port(port, baud_rate):
+def open_port(port: int, baud_rate: int) -> ErrorCode:
     ser.baudrate = baud_rate
     ser.timeout = READ_TIMEOUT
     ser.port = port
@@ -158,24 +158,24 @@ def open_port(port, baud_rate):
     ser.timeout = 5
     return ErrorCode.OK
 
-def close_port():
+def close_port() -> ErrorCode:
     ser.close()
     return ErrorCode.OK
 
-def send_command(send_string):
+def send_command(send_string: str) -> ErrorCode:
     if(ser.isOpen() == False):
         return ErrorCode.BAD_COMPORT_WRITE
     ser.write(str.encode(send_string)) # convert to bytes
     return ErrorCode.OK
 
-def get_reply():
+def get_reply() -> ErrorCode:
     reply_string = ser.read_until(b'\n', 50)
     if (len(reply_string) == 0):
         return ErrorCode.BAD_COMPORT_READ
     else:
         return ErrorCode.OK
 
-def do_command(cmd_string, first_int):
+def do_command(cmd_string: str, first_int: int) -> ErrorCode:
     status = send_command(cmd_string)
     if(status != ErrorCode.OK):
         return status
@@ -188,7 +188,7 @@ def do_command(cmd_string, first_int):
     status = int_parameter[1]
     return status
 
-def Parse_string(string_data):
+def Parse_string(string_data: str) -> ErrorCode:
     for index in range(MAX_COMMAND_PARAMETERS):
         int_parameter[index] = 0
         float_parameter[index] = 0.0
@@ -229,7 +229,7 @@ def Parse_string(string_data):
 # ===========================================================================
 # ping code
 
-def ping():
+def ping() -> ErrorCode:
     cmd_string = "ping 0 " + str(random.randint(1,98)) + "\n"
     first_val = 0
     status =  do_command(cmd_string, first_val)
@@ -239,7 +239,7 @@ def ping():
 # ===========================================================================
 # servo code
 
-def Execute_servo_cmd(joint, position, speed, group):
+def Execute_servo_cmd(joint: int, position: int, speed: int, group: bool) -> ErrorCode:
     status = check_joint_data(joint, position, speed)
     if (status != ErrorCode.OK):
         return status
@@ -263,7 +263,7 @@ def Execute_servo_cmd(joint, position, speed, group):
     Pi_the_robot.sys_print(status)
     return status
 
-def Mouth_on_off(mouthstate, group):
+def Mouth_on_off(mouthstate: bool, group: bool) -> ErrorCode:
     if (group == False):
         servo_cmd = ServoCommands.ABS_MOVE
     else:
@@ -282,7 +282,7 @@ def Mouth_on_off(mouthstate, group):
     Pi_the_robot.sys_print(status)
     return status
 
-def check_joint_data(joint, position, speed):
+def check_joint_data(joint: int, position: int, speed: int) -> ErrorCode:
     if ((joint < FIRST_JOINT) or (joint > LAST_JOINT)):
         return ErrorCode.BAD_JOINT_CODE
     if ((position < servo_data[joint][2]) or (position > servo_data[joint][3])):
@@ -295,7 +295,7 @@ def check_joint_data(joint, position, speed):
 # ===========================================================================
 # Stepper motor code
 
-def execute_stepper_cmd(stepper_no, stepper_cmd, stepper_speed_profile, stepper_step_value):
+def execute_stepper_cmd(stepper_no, stepper_cmd, stepper_speed_profile, stepper_step_value) -> ErrorCode:
     cmd_string =(f"stepper {Sys_values.DEFAULT_PORT} {stepper_cmd} {stepper_no} {stepper_step_value}\n")
     first_val = 0
     status =  Command_IO.do_command(cmd_string, first_val)
@@ -305,17 +305,17 @@ def execute_stepper_cmd(stepper_no, stepper_cmd, stepper_speed_profile, stepper_
 # ===========================================================================
 # Display code
 
-def page_update(page_index):
+def page_update(page_index) -> ErrorCode:
     cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.SET_FORM} {page_index}\n")
     first_val = 0
     status =  Command_IO.do_command(cmd_string, first_val)
     Pi_the_robot.sys_print(status)
     return status
 
-def string_update(self):
+def string_update(self) -> None:
     pass
 
-def read_button(button_index):
+def read_button(button_index: int) -> ErrorCode:
     cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.READ_BUTTON} {button_index}\n")
     first_val = 0
     status =  Command_IO.do_command(cmd_string, first_val)
@@ -373,7 +373,7 @@ def run_sequence(sequence) -> ErrorCode:
 # run sequences of commands from a text file
 #
 
-def run_file_sequence(filename) -> ErrorCode:
+def run_file_sequence(filename: str) -> ErrorCode:
     try:
         text_data = open(filename, 'r')
     except FileNotFoundError:
