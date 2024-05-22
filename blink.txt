@@ -3,3 +3,4 @@ servo 9 0 6 -25
 delay 1
 servo 9 0 2 25
 servo 9 0 6 25
+delay 5

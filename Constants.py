@@ -9,7 +9,8 @@ class Sys_values(IntEnum):
     DEFAULT_PORT      = 9
     POWER_ON_SEQUENCE = 0
     SPEED_THRESHOLD   = 21
-    NOS_SERVOS        =  8
+    NOS_SERVOS        = 8
+    NOS_STEPPERS      = 1
     TEST_MODE         = False
     DEBUG_MODE        = True
 

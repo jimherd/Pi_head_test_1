@@ -9,6 +9,7 @@ from Constants  import  *
 from Pi_sound   import  *
 from Sequences  import  *
 
+
 # ===========================================================================
         
 def init_sys(comport: str) -> ErrorCode:
@@ -37,4 +38,10 @@ def run_sys() -> None:
 #    Command_IO.run_file_sequence("seq0.txt")
     Command_IO.run_file_sequence("blink.txt")
     Command_IO.run_file_sequence("wink.txt")
+
+def blink(number: int, sound: bool) -> ErrorCode:
+    pass
+
+def wink (number: int, left: bool, sound: bool) -> ErrorCode:
+    pass
 

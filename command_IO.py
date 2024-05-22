@@ -130,6 +130,8 @@ class StepperCommands(IntEnum):
     ABS_MOVE_SYNC      = 3
     CALIBRATE          = 4
 
+current_pose   = arr.array('i', repeat(0, (Sys_values.NOS_SERVOS + Sys_values.NOS_STEPPERS)))
+
 argc: int = 0
 int_parameter   = arr.array('i', repeat(0, MAX_COMMAND_PARAMETERS))
 float_parameter = arr.array('f', repeat(0, MAX_COMMAND_PARAMETERS))
@@ -260,6 +262,8 @@ def Execute_servo_cmd(joint: int, position: int, speed: int, group: bool) -> Err
 # execute servo move command
     first_val = 0
     status =  Command_IO.do_command(cmd_string, first_val)
+    if (status == ErrorCode.OK):
+        current_pose[joint] = position  # record new position
     Pi_the_robot.sys_print(status)
     return status
 
@@ -279,6 +283,13 @@ def Mouth_on_off(mouthstate: bool, group: bool) -> ErrorCode:
     # execute servo move command
     first_val = 0
     status =  Command_IO.do_command(cmd_string, first_val)
+    if (status == ErrorCode.OK): 
+        if (mouth_state == Mouth.OFF):
+            mouth_state = Mouth.ON
+            current_pose[Joints.MOUTH] = 45
+        else:
+            mouth_state = Mouth.OFF
+            current_pose[Joints.mouth] = 0
     Pi_the_robot.sys_print(status)
     return status
 
