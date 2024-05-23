@@ -1,5 +1,5 @@
 servo 9 0 2 -25
-plays "click-button-1.wav"
+plays click-button-1.wav
 delay 1
 servo 9 0 2 +25
 delay 3

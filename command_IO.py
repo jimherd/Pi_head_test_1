@@ -367,7 +367,7 @@ def run_sequence(sequence) -> ErrorCode:
                 else:
                     play_TTS_string(sentence, wait)
             case "plays":
-                play_sound_file(os.path.join(cmd_argv[1]))
+                play_sound_file(cmd_argv[1])
             case "delay":
                 delay = int(cmd_argv[1])
                 time.sleep(delay)
