@@ -384,9 +384,9 @@ def run_sequence(sequence) -> Sys_err.ErrorCode:
                     play_TTS_string(sentence, block)
             case "plays":
                 block = False
-                if (cmd_argv[2] == "-b"):
+                if (cmd_argv[1] == "-b"):
                     block = True
-                play_sound_file(cmd_argv[1], block)
+                play_sound_file(cmd_argv[2], block)
             case "delay":
                 delay = int(cmd_argv[1])
                 time.sleep(delay)
