@@ -1,8 +1,9 @@
 servo 9 0 2 -25
-plays click-button-1.wav
+plays -b click-button-1.wav
 delay 1
-servo 9 0 2 +25
-delay 3
+servo 9 0 2 25
+delay 2
 servo 9 0 6 -25
+plays -b click-button-1.wav 
 delay 1
 servo 9 0 6 25

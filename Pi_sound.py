@@ -10,8 +10,11 @@ import os
 import time
 import pyttsx3
 
+import Sys_err
+
 from playsound  import  *
-from Command_IO import  *
+# import Command_IO
+# from Command_IO import  ErrorCode
 from Globals    import  *
 from Constants  import  *
 
@@ -23,13 +26,17 @@ def init_sound_output():
     __engine.setProperty('voice', voices[1].id)
     print(f"sound_dir = {_sound_dir}")
 
-def play_sound_file(filename: str):
-    fname = os.path.join(_sound_dir, filename)
-    playsound(os.path.join(_sound_dir, filename))
+def play_sound_file(filename: str, block: bool) -> Sys_err.ErrorCode:
+    file = os.path.join(_sound_dir, filename)
+    if os.path.isfile(file):
+        playsound(file, block)
+        return Sys_err.ErrorCode.OK
+    return Sys_err.ErrorCode.FILE_NOT_FOUND
+    
 
-def play_TTS_string(sentence, wait):
+def play_TTS_string(sentence, block):
     __engine.say(sentence)
-    if (wait == True):
+    if (block == True):
         __engine.runAndWait()
 
 def TTS_wait_finish():

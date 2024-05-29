@@ -9,10 +9,12 @@ import array as arr
 from enum import Enum, IntEnum
 from itertools import repeat
 
+import Sys_err
+import Command_IO
+
 import Pi_the_robot
 import Globals
 from Constants import *
-import Command_IO
 from Pi_sound import *
 from Sequences import *
 
@@ -58,54 +60,54 @@ class Display_commands(IntEnum):
     SET_CONTRAST  = 2
     READ_BUTTON   = 3
 
-class ErrorCode(IntEnum):
-    OK                               = 0,
-    LETTER_ERROR                     = -100,   # rp2040 generated errors
-    DOT_ERROR                        = -101,
-    PLUSMINUS_ERROR                  = -102,
-    BAD_COMMAND                      = -103,
-    BAD_PORT_NUMBER                  = -104,
-    BAD_NOS_PARAMETERS               = -105,
-    BAD_BASE_PARAMETER               = -106,
-    PARAMETER_OUTWITH_LIMITS         = -107,
-    BAD_SERVO_COMMAND                = -108,
-    STEPPER_CALIBRATE_FAIL           = -109,
-    BAD_STEPPER_COMMAND              = -110,
-    BAD_STEP_VALUE                   = -111,
-    MOVE_ON_UNCALIBRATED_MOTOR       = -112,
-    EXISTING_FAULT_WITH_MOTOR        = -113,
-    SM_MOVE_TOO_SMALL                = -114,
-    LIMIT_SWITCH_ERROR               = -115,
-    UNKNOWN_STEPPER_MOTOR_STATE      = -116,
-    STEPPER_BUSY                     = -117,
-    SERVO_BUSY                       = -118,
-    GEN4_uLCD_NOT_DETECTED           = -119,
-    GEN4_uLCD_WRITE_OBJ_FAIL         = -120,
-    GEN4_uLCD_WRITE_OBJ_TIMEOUT      = -121,
-    GEN4_uLCD_WRITE_CONTRAST_FAIL    = -122,
-    GEN4_uLCD_WRITE_CONTRAST_TIMEOUT = -123,   
-    GEN4_uLCD_READ_OBJ_FAIL          = -124,
-    GEN4_uLCD_READ_OBJ_TIMEOUT       = -125,
-    GEN4_uLCD_CMD_BAD_FORM_INDEX     = -126,
-    GEN4_uLCD_WRITE_STR_TOO_BIG      = -127,
-    GEN4_uLCD_WRITE_STRING_FAIL      = -128,
-    GEN4_uLCD_WRITE_STRING_TIMEOUT   = -129,
-    GEN4_uLCD_BUTTON_FORM_INACTIVE   = -130,
-    QUOTE_ERROR                      = -131,
+# class ErrorCode(IntEnum):
+#     OK                               = 0,
+#     LETTER_ERROR                     = -100,   # rp2040 generated errors
+#     DOT_ERROR                        = -101,
+#     PLUSMINUS_ERROR                  = -102,
+#     BAD_COMMAND                      = -103,
+#     BAD_PORT_NUMBER                  = -104,
+#     BAD_NOS_PARAMETERS               = -105,
+#     BAD_BASE_PARAMETER               = -106,
+#     PARAMETER_OUTWITH_LIMITS         = -107,
+#     BAD_SERVO_COMMAND                = -108,
+#     STEPPER_CALIBRATE_FAIL           = -109,
+#     BAD_STEPPER_COMMAND              = -110,
+#     BAD_STEP_VALUE                   = -111,
+#     MOVE_ON_UNCALIBRATED_MOTOR       = -112,
+#     EXISTING_FAULT_WITH_MOTOR        = -113,
+#     SM_MOVE_TOO_SMALL                = -114,
+#     LIMIT_SWITCH_ERROR               = -115,
+#     UNKNOWN_STEPPER_MOTOR_STATE      = -116,
+#     STEPPER_BUSY                     = -117,
+#     SERVO_BUSY                       = -118,
+#     GEN4_uLCD_NOT_DETECTED           = -119,
+#     GEN4_uLCD_WRITE_OBJ_FAIL         = -120,
+#     GEN4_uLCD_WRITE_OBJ_TIMEOUT      = -121,
+#     GEN4_uLCD_WRITE_CONTRAST_FAIL    = -122,
+#     GEN4_uLCD_WRITE_CONTRAST_TIMEOUT = -123,   
+#     GEN4_uLCD_READ_OBJ_FAIL          = -124,
+#     GEN4_uLCD_READ_OBJ_TIMEOUT       = -125,
+#     GEN4_uLCD_CMD_BAD_FORM_INDEX     = -126,
+#     GEN4_uLCD_WRITE_STR_TOO_BIG      = -127,
+#     GEN4_uLCD_WRITE_STRING_FAIL      = -128,
+#     GEN4_uLCD_WRITE_STRING_TIMEOUT   = -129,
+#     GEN4_uLCD_BUTTON_FORM_INACTIVE   = -130,
+#     QUOTE_ERROR                      = -131,
     
 
-    BAD_COMPORT_OPEN                = -200     # PC/Pi errors
-    UNKNOWN_COM_PORT                = -201
-    BAD_COMPORT_READ                = -202
-    BAD_COMPORT_WRITE               = -203
-    NULL_EMPTY_STRING               = -204
-    BAD_COMPORT_CLOSE               = -205
-    BAD_STRING_PARSE                = -206
-    BAD_JOINT_CODE                  = -207,
-    BAD_SERVO_POSITION              = -208,
-    BAD_SPEED_VALUE                 = -209,
-    TEXTFILE_NOT_FOUND              = -210,
-    COMMAND_FILE_NOT_FOUND          = -211,
+#     BAD_COMPORT_OPEN                = -200     # PC/Pi errors
+#     UNKNOWN_COM_PORT                = -201
+#     BAD_COMPORT_READ                = -202
+#     BAD_COMPORT_WRITE               = -203
+#     NULL_EMPTY_STRING               = -204
+#     BAD_COMPORT_CLOSE               = -205
+#     BAD_STRING_PARSE                = -206
+#     BAD_JOINT_CODE                  = -207,
+#     BAD_SERVO_POSITION              = -208,
+#     BAD_SPEED_VALUE                 = -209,
+#     FILE_NOT_FOUND                  = -210,
+#     COMMAND_FILE_NOT_FOUND          = -211,
 
 class Modes(IntEnum):
     MODE_U = 0
@@ -147,7 +149,21 @@ def command_IO_init() -> None:
     float_parameter = arr.array('f', repeat(0, MAX_COMMAND_PARAMETERS))
     param_type      = arr.array('i', repeat(0, MAX_COMMAND_PARAMETERS))
 
-def open_port(port: int, baud_rate: int) -> ErrorCode:
+def init_sys(comport: str) -> Sys_err.ErrorCode:
+    command_IO_init()
+    if (Sys_values.TEST_MODE == False):
+        status = Command_IO.open_port(Sys_strings.PI_HEAD_COM_PORT, Sys_values.PI_HEAD_BAUD_RATE)
+        if ( status !=  Sys_err.ErrorCode.OK):
+            Pi_the_robot.sys_print("Fail to open port")
+            return status
+        status = Command_IO.ping()
+        if ( status !=  Sys_err.ErrorCode.OK):
+            Pi_the_robot.sys_print("Fail to Ping board")
+            return status
+    init_sound_output()
+    return Sys_err.ErrorCode.OK
+
+def open_port(port: int, baud_rate: int) -> Sys_err.ErrorCode:
     ser.baudrate = baud_rate
     ser.timeout = READ_TIMEOUT
     ser.port = port
@@ -155,42 +171,42 @@ def open_port(port: int, baud_rate: int) -> ErrorCode:
     try:
         ser.open()
     except serial.SerialException as var : # var contains details of issue:
-        return ErrorCode.BAD_COMPORT_OPEN
+        return Sys_err.ErrorCode.BAD_COMPORT_OPEN
     ser.flushInput()
     ser.timeout = 5
-    return ErrorCode.OK
+    return Sys_err.ErrorCode.OK
 
-def close_port() -> ErrorCode:
+def close_port() -> Sys_err.ErrorCode:
     ser.close()
-    return ErrorCode.OK
+    return Sys_err.ErrorCode.OK
 
-def send_command(send_string: str) -> ErrorCode:
+def send_command(send_string: str) -> Sys_err.ErrorCode:
     if(ser.isOpen() == False):
-        return ErrorCode.BAD_COMPORT_WRITE
+        return Sys_err.ErrorCode.BAD_COMPORT_WRITE
     ser.write(str.encode(send_string)) # convert to bytes
-    return ErrorCode.OK
+    return Sys_err.ErrorCode.OK
 
-def get_reply() -> ErrorCode:
+def get_reply() -> Sys_err.ErrorCode:
     reply_string = ser.read_until(b'\n', 50)
     if (len(reply_string) == 0):
-        return ErrorCode.BAD_COMPORT_READ
+        return Sys_err.ErrorCode.BAD_COMPORT_READ
     else:
-        return ErrorCode.OK
+        return Sys_err.ErrorCode.OK
 
-def do_command(cmd_string: str, first_int: int) -> ErrorCode:
+def do_command(cmd_string: str, first_int: int) -> Sys_err.ErrorCode:
     status = send_command(cmd_string)
-    if(status != ErrorCode.OK):
+    if(status != Sys_err.ErrorCode.OK):
         return status
     status = get_reply()
-    if(status != ErrorCode.OK):
+    if(status != Sys_err.ErrorCode.OK):
         return status
     status = Parse_string(reply_string)
-    if(status != ErrorCode.OK):
+    if(status != Sys_err.ErrorCode.OK):
         return status
     status = int_parameter[1]
     return status
 
-def Parse_string(string_data: str) -> ErrorCode:
+def Parse_string(string_data: str) -> Sys_err.ErrorCode:
     for index in range(MAX_COMMAND_PARAMETERS):
         int_parameter[index] = 0
         float_parameter[index] = 0.0
@@ -226,12 +242,12 @@ def Parse_string(string_data: str) -> ErrorCode:
         param_type[index] = Modes.MODE_S
         Pi_the_robot.sys_print(int_parameter)
 
-    return ErrorCode.OK
+    return Sys_err.ErrorCode.OK
 
 # ===========================================================================
 # ping code
 
-def ping() -> ErrorCode:
+def ping() -> Sys_err.ErrorCode:
     cmd_string = "ping 0 " + str(random.randint(1,98)) + "\n"
     first_val = 0
     status =  do_command(cmd_string, first_val)
@@ -241,9 +257,9 @@ def ping() -> ErrorCode:
 # ===========================================================================
 # servo code
 
-def Execute_servo_cmd(joint: int, position: int, speed: int, group: bool) -> ErrorCode:
+def Execute_servo_cmd(joint: int, position: int, speed: int, group: bool) -> Sys_err.ErrorCode:
     status = check_joint_data(joint, position, speed)
-    if (status != ErrorCode.OK):
+    if (status != Sys_err.ErrorCode.OK):
         return status
 # select type of move command
     if ((group == False) and (speed < Sys_values.SPEED_THRESHOLD)):
@@ -261,13 +277,13 @@ def Execute_servo_cmd(joint: int, position: int, speed: int, group: bool) -> Err
         cmd_string =(f"servo {Sys_values.DEFAULT_PORT} {servo_cmd} {joint} {position} {speed}\n")
 # execute servo move command
     first_val = 0
-    status =  Command_IO.do_command(cmd_string, first_val)
-    if (status == ErrorCode.OK):
+    status =  do_command(cmd_string, first_val)
+    if (status == Sys_err.ErrorCode.OK):
         current_pose[joint] = position  # record new position
     Pi_the_robot.sys_print(status)
     return status
 
-def Mouth_on_off(mouthstate: bool, group: bool) -> ErrorCode:
+def Mouth_on_off(mouthstate: bool, group: bool) -> Sys_err.ErrorCode:
     if (group == False):
         servo_cmd = ServoCommands.ABS_MOVE
     else:
@@ -282,8 +298,8 @@ def Mouth_on_off(mouthstate: bool, group: bool) -> ErrorCode:
 
     # execute servo move command
     first_val = 0
-    status =  Command_IO.do_command(cmd_string, first_val)
-    if (status == ErrorCode.OK): 
+    status =  do_command(cmd_string, first_val)
+    if (status == Sys_err.ErrorCode.OK): 
         if (mouth_state == Mouth.OFF):
             mouth_state = Mouth.ON
             current_pose[Joints.MOUTH] = 45
@@ -293,43 +309,43 @@ def Mouth_on_off(mouthstate: bool, group: bool) -> ErrorCode:
     Pi_the_robot.sys_print(status)
     return status
 
-def check_joint_data(joint: int, position: int, speed: int) -> ErrorCode:
+def check_joint_data(joint: int, position: int, speed: int) -> Sys_err.ErrorCode:
     if ((joint < FIRST_JOINT) or (joint > LAST_JOINT)):
-        return ErrorCode.BAD_JOINT_CODE
+        return Sys_err.ErrorCode.BAD_JOINT_CODE
     if ((position < servo_data[joint][2]) or (position > servo_data[joint][3])):
-        return ErrorCode.BAD_SERVO_POSITION
+        return Sys_err.ErrorCode.BAD_SERVO_POSITION
     if ((position < servo_data[joint][4]) or (position > servo_data[joint][5])):
-        return ErrorCode.BAD_SPEED_VALUE
-    return ErrorCode.OK
+        return Sys_err.ErrorCode.BAD_SPEED_VALUE
+    return Sys_err.ErrorCode.OK
     
 
 # ===========================================================================
 # Stepper motor code
 
-def execute_stepper_cmd(stepper_no, stepper_cmd, stepper_speed_profile, stepper_step_value) -> ErrorCode:
+def execute_stepper_cmd(stepper_no, stepper_cmd, stepper_speed_profile, stepper_step_value) -> Sys_err.ErrorCode:
     cmd_string =(f"stepper {Sys_values.DEFAULT_PORT} {stepper_cmd} {stepper_no} {stepper_step_value}\n")
     first_val = 0
-    status =  Command_IO.do_command(cmd_string, first_val)
+    status =  do_command(cmd_string, first_val)
     Pi_the_robot.sys_print(status)
     return status
 
 # ===========================================================================
 # Display code
 
-def page_update(page_index) -> ErrorCode:
+def page_update(page_index) -> Sys_err.ErrorCode:
     cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.SET_FORM} {page_index}\n")
     first_val = 0
-    status =  Command_IO.do_command(cmd_string, first_val)
+    status =  do_command(cmd_string, first_val)
     Pi_the_robot.sys_print(status)
     return status
 
 def string_update(self) -> None:
     pass
 
-def read_button(button_index: int) -> ErrorCode:
+def read_button(button_index: int) -> Sys_err.ErrorCode:
     cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.READ_BUTTON} {button_index}\n")
     first_val = 0
-    status =  Command_IO.do_command(cmd_string, first_val)
+    status =  do_command(cmd_string, first_val)
     Pi_the_robot.sys_print(status)
     return status
 
@@ -339,7 +355,7 @@ def read_button(button_index: int) -> ErrorCode:
 # check for local commands (speak, ...) before sending remote command
 # to the rp2040 MCU that controls the robot head hardware
 
-def run_sequence(sequence) -> ErrorCode:
+def run_sequence(sequence) -> Sys_err.ErrorCode:
     for i in range(len(sequence)):
         cmd_argv = sequence[i].split()
 
@@ -348,26 +364,29 @@ def run_sequence(sequence) -> ErrorCode:
             case "speak":
                 say_list = cmd_argv[3:]
                 sentence = " ".join(say_list)
-                wait = False
+                block = False
                 if (cmd_argv[2] == "w"):
-                    wait = True
+                    block = True
                 if (cmd_argv[1] == "f"):
                     try:
                         file = open(cmd_argv[3], 'r')
                     except FileNotFoundError:
                         print('This file does not exist')
-                        return ErrorCode.TEXTFILE_NOT_FOUND
+                        return Sys_err.ErrorCode.FILE_NOT_FOUND
                     while True:
                         text_line = file.readline()
                         if not text_line:
                             break
-                        play_TTS_string(text_line, wait)
+                        play_TTS_string(text_line, block)
                         TTS_wait_finish()
                     file.close()
                 else:
-                    play_TTS_string(sentence, wait)
+                    play_TTS_string(sentence, block)
             case "plays":
-                play_sound_file(cmd_argv[1])
+                block = False
+                if (cmd_argv[2] == "-b"):
+                    block = True
+                play_sound_file(cmd_argv[1], block)
             case "delay":
                 delay = int(cmd_argv[1])
                 time.sleep(delay)
@@ -375,22 +394,22 @@ def run_sequence(sequence) -> ErrorCode:
                 first_val = 0
                 cmd_string = sequence[i]  + '\n'  #   (f"{sequences[sequence_index][i]}\n")
                 Pi_the_robot.sys_print("cmd =", cmd_string)
-                status =  Command_IO.do_command(cmd_string, first_val)
-                if (status != ErrorCode.OK):
+                status =  do_command(cmd_string, first_val)
+                if (status != Sys_err.ErrorCode.OK):
                     return status
  # exit               
-    return ErrorCode.OK
+    return Sys_err.ErrorCode.OK
 
 # ===========================================================================
 # run sequences of commands from a text file
 #
 
-def run_file_sequence(filename: str) -> ErrorCode:
+def run_file_sequence(filename: str) -> Sys_err.ErrorCode:
     try:
         text_data = open(filename, 'r')
     except FileNotFoundError:
         print(f'Cannot open file {filename}')
-        return ErrorCode.COMMAND_FILE_NOT_FOUND
+        return Sys_err.ErrorCode.COMMAND_FILE_NOT_FOUND
     data = text_data.read()            # read raw text data from text file
     cmd_list = data.splitlines(False)  # convert to list of commands and 
                                        # delete line separators
