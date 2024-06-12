@@ -41,6 +41,7 @@ def run_sys() -> None:
     Command_IO.run_file_sequence("wink.txt")
 
 def blink(number: int, sound: bool) -> Sys_err.ErrorCode:
+    
     pass
 
 def wink (number: int, left: bool, sound: bool) -> Sys_err.ErrorCode:

@@ -24,15 +24,15 @@ MAX_COMMAND_STRING_LENGTH = 100
 MAX_REPLY_STRING_LENGTH = 100
 
 class Joints(IntEnum):
-    LEFT_EYE_LR    = 0
-    LEFT_EYE_UD    = 1
-    LEFT_EYE_LID   = 2
-    LEFT_EYE_BROW  = 3
-    RIGHT_EYE_LR   = 4
-    RIGHT_EYE_UD   = 5
-    RIGHT_EYE_LID  = 6
-    RIGHT_EYE_BROW = 7
-    MOUTH          = 8
+    RIGHT_EYE_LR    = 0
+    RIGHT_EYE_UD    = 1
+    RIGHT_EYE_LID   = 2
+    RIGHT_EYE_BROW  = 3
+    LEFT_EYE_LR     = 4
+    LEFT_EYE_UD     = 5
+    LEFT_EYE_LID    = 6
+    LEFT_EYE_BROW   = 7
+    MOUTH           = 8
 
 FIRST_JOINT = Joints.LEFT_EYE_LR
 LAST_JOINT  = Joints.RIGHT_EYE_BROW
@@ -43,14 +43,14 @@ class Mouth(IntEnum):
 
 # servo number, servo  type, -ve max, +ve max, init value, min delay, max delay
 servo_data = [  
-    [Joints.LEFT_EYE_LR,    servo_type.SERVO, -25, +25, 0, 0, 250],
-    [Joints.LEFT_EYE_UD,    servo_type.SERVO, -45, +45, 0, 0, 250],
-    [Joints.LEFT_EYE_LID,   servo_type.SERVO, -25, +25, 0, 0, 250],
-    [Joints.LEFT_EYE_BROW,  servo_type.SERVO, -30, +30, 0, 0, 250],
-    [Joints.RIGHT_EYE_LR,   servo_type.SERVO, -25, +25, 0, 0, 250],
-    [Joints.RIGHT_EYE_UD,   servo_type.SERVO, -45, +45, 0, 0, 250],
-    [Joints.RIGHT_EYE_LID,  servo_type.SERVO, -25, +25, 0, 0, 250],
-    [Joints.RIGHT_EYE_BROW, servo_type.SERVO, -30, +30, 0, 0, 250],
+    [Joints.RIGHT_EYE_LR,    servo_type.SERVO, -25, +25, 0, 0, 250],
+    [Joints.RIGHT_EYE_UD,    servo_type.SERVO, -45, +45, 0, 0, 250],
+    [Joints.RIGHT_EYE_LID,   servo_type.SERVO, -25, +25, 0, 0, 250],
+    [Joints.RIGHT_EYE_BROW,  servo_type.SERVO, -30, +30, 0, 0, 250],
+    [Joints.LEFT_EYE_LR,   servo_type.SERVO, -25, +25, 0, 0, 250],
+    [Joints.LEFT_EYE_UD,   servo_type.SERVO, -45, +45, 0, 0, 250],
+    [Joints.LEFT_EYE_LID,  servo_type.SERVO, -25, +25, 0, 0, 250],
+    [Joints.LEFT_EYE_BROW, servo_type.SERVO, -30, +30, 0, 0, 250],
     [Joints.MOUTH,          servo_type.MOTOR, -30, +30, 0, 0, 250],
 ]
 
