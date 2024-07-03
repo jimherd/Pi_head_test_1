@@ -29,16 +29,25 @@ from Sequences  import  *
 #
 # print if in debug mode
 #
+
 def sys_print(*args) -> None:
     if (Sys_values.DEBUG_MODE == True):
         #Iterate over all args, convert them to str, and join them
         args_str = ','.join(map(str,args))
         print(args_str)
 
-def run_sys() -> None:
+def speak_error(err_code: Sys_err.ErrorCode) -> None:
+    play_TTS_string(Sys_err.Error_String_dict[err_code], True)
+
+def run_sys() -> Sys_err.ErrorCode:
 #    Command_IO.run_file_sequence("seq0.txt")
-    Command_IO.run_file_sequence("blink.txt")
-    Command_IO.run_file_sequence("wink.txt")
+    status = Command_IO.run_file_sequence("blink.txt")
+    if (status != Sys_err.ErrorCode.OK):
+        return status
+    status = Command_IO.run_file_sequence("wink.txt")
+    if (status != Sys_err.ErrorCode.OK):
+        return status
+    return status
 
 def blink(number: int, speed: int, time: int) -> Sys_err.ErrorCode:
     for x in range(number):

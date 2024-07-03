@@ -26,10 +26,13 @@ def main():
     status = Command_IO.init_sys(Command_IO.Pi_head_com_port)
     if (status != Sys_err.ErrorCode.OK):
         Pi_the_robot.sys_print(status)
-        pass   # need a way to show error
+        Pi_the_robot.speak_error(status)
+        time.sleep(5)
+        return
     play_TTS_string(Sys_strings.INTRO_STRING, True)
     Pi_the_robot.sys_print("Hello")
     Pi_the_robot.run_sys()
+    
 
 if __name__ == "__main__":
     sys.exit(main())

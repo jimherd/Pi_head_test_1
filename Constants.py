@@ -13,6 +13,7 @@ class Sys_values(IntEnum):
     NOS_STEPPERS      = 1
     TEST_MODE         = False
     DEBUG_MODE        = True
+    DEBUG_SPEAK_MODE  = True
 
 
 class servo_type(IntEnum):
