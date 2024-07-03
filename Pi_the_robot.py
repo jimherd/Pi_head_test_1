@@ -40,9 +40,25 @@ def run_sys() -> None:
     Command_IO.run_file_sequence("blink.txt")
     Command_IO.run_file_sequence("wink.txt")
 
-def blink(number: int, sound: bool) -> Sys_err.ErrorCode:
-    
-    pass
+def blink(number: int, speed: int, time: int) -> Sys_err.ErrorCode:
+    for x in range(number):
+        Command_IO.Execute_servo_cmd(Command_IO.Joints.LEFT_EYE_LID, 
+                                    Command_IO.servo_data[Command_IO.Joints.LEFT_EYE_LID][2],
+                                    speed,
+                                    False)
+        Command_IO.Execute_servo_cmd(Command_IO.Joints.RIGHT_EYE_LID, 
+                                    Command_IO.servo_data[Command_IO.Joints.RIGHT_EYE_LID][2],
+                                    speed,
+                                    False)
+        time.sleep(time * 0.1)
+        Command_IO.Execute_servo_cmd(Command_IO.Joints.LEFT_EYE_LID, 
+                                    Command_IO.servo_data[Command_IO.Joints.LEFT_EYE_LID][3],
+                                    speed,
+                                    False)
+        Command_IO.Execute_servo_cmd(Command_IO.Joints.RIGHT_EYE_LID, 
+                                    Command_IO.servo_data[Command_IO.Joints.RIGHT_EYE_LID][3],
+                                    speed,
+                                    False)
 
 def wink (number: int, left: bool, sound: bool) -> Sys_err.ErrorCode:
     pass

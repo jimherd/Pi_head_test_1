@@ -20,8 +20,9 @@ class servo_type(IntEnum):
     MOTOR = 1
 
 class Sys_strings(StrEnum):
-    PI_HEAD_COM_PORT  = "com3"
-    INTRO_STRING      = "Hello"
+    WIN_COM_PORT = "com3"
+    PI_COM_PORT  = "/dev/serial0"
+    INTRO_STRING = "Hello"
 
 class This_platform(IntEnum):
     UNKNOWN    = 0

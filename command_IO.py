@@ -18,6 +18,7 @@ from Constants import *
 from Pi_sound import *
 from Sequences import *
 
+Pi_head_com_port = ""
 MAX_COMMAND_PARAMETERS = 10
 READ_TIMEOUT = 4  # seconds
 MAX_COMMAND_STRING_LENGTH = 100
@@ -34,8 +35,8 @@ class Joints(IntEnum):
     LEFT_EYE_BROW   = 7
     MOUTH           = 8
 
-FIRST_JOINT = Joints.LEFT_EYE_LR
-LAST_JOINT  = Joints.RIGHT_EYE_BROW
+FIRST_JOINT = Joints.RIGHT_EYE_LR
+LAST_JOINT  = Joints.LEFT_EYE_BROW
 
 class Mouth(IntEnum):
     OFF  = 0
@@ -152,7 +153,7 @@ def command_IO_init() -> None:
 def init_sys(comport: str) -> Sys_err.ErrorCode:
     command_IO_init()
     if (Sys_values.TEST_MODE == False):
-        status = Command_IO.open_port(Sys_strings.PI_HEAD_COM_PORT, Sys_values.PI_HEAD_BAUD_RATE)
+        status = Command_IO.open_port(comport, Sys_values.PI_HEAD_BAUD_RATE)
         if ( status !=  Sys_err.ErrorCode.OK):
             Pi_the_robot.sys_print("Fail to open port")
             return status
