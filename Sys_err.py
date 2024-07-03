@@ -52,13 +52,15 @@ class ErrorCode(IntEnum):
     BAD_SPEED_VALUE                 = -209,
     FILE_NOT_FOUND                  = -210,
     COMMAND_FILE_NOT_FOUND          = -211,
+    LAST_ENTRY                      = -10000
+
 
 Error_String = [
     [ErrorCode.OK, "All is OK"],
     [ErrorCode.LETTER_ERROR, "letter in number string"],
     [ErrorCode.DOT_ERROR, "dot error in number string"],
-    [ErrorCode.PLUSMINUS_ERRORPLUSMINUS_ERROR, "plus minus in wrong placein string"],
-    [ErrorCode.BAD_COMMANDBAD_COMMAND, "Unknown PICO command"],
+    [ErrorCode.PLUSMINUS_ERROR, "plus minus in wrong placein string"],
+    [ErrorCode.BAD_COMMAND, "Unknown PICO command"],
     [ErrorCode.BAD_PORT_NUMBER,"bad port number"],
     [ErrorCode.BAD_NOS_PARAMETERS,"wrong number of parameters"],
     [ErrorCode.BAD_BASE_PARAMETER,""],
@@ -100,5 +102,60 @@ Error_String = [
     [ErrorCode.BAD_SERVO_POSITION,"bad servo position"],
     [ErrorCode.BAD_SPEED_VALUE,"bad speed value"],
     [ErrorCode.FILE_NOT_FOUND,"file not found"],
-    [ErrorCode.COMMAND_FILE_NOT_FOUND,"command file not found"],
+    [ErrorCode.COMMAND_FILE_NOT_FOUND,"command file not found"]
 ]
+
+
+Error_String_dict = {
+    ErrorCode.OK:                              "All is OK",
+    ErrorCode.LETTER_ERROR:                    "letter in number string",
+    ErrorCode.DOT_ERROR:                       "dot error in number string",
+    ErrorCode.PLUSMINUS_ERROR:                 "plus minus in wrong placein string",
+    ErrorCode.BAD_COMMAND:                     "Unknown PICO command",
+    ErrorCode.BAD_PORT_NUMBER:                 "bad port number",
+    ErrorCode.BAD_NOS_PARAMETERS:              "wrong number of parameters",
+    ErrorCode.BAD_BASE_PARAMETER:              "",
+    ErrorCode.PARAMETER_OUTWITH_LIMITS:        "a parameter is outwith set limits",
+    ErrorCode.BAD_SERVO_COMMAND:               "bad servo command",
+    ErrorCode.STEPPER_CALIBRATE_FAIL:          "stepper motor failed to calibrate",
+    ErrorCode.BAD_STEPPER_COMMAND:             "bad stepper motor command",
+    ErrorCode.BAD_STEP_VALUE:                  "bad stepper motor step value",
+    ErrorCode.MOVE_ON_UNCALIBRATED_MOTOR:      "move failed as stepper motor is not calibrated",
+    ErrorCode.EXISTING_FAULT_WITH_MOTOR:        "currently, motor has a fault",
+    ErrorCode.SM_MOVE_TOO_SMALL:                "stepper motor move request is too small",
+    ErrorCode.LIMIT_SWITCH_ERROR:               "failed to detect limit switch",
+    ErrorCode.UNKNOWN_STEPPER_MOTOR_STATE:      "stepper motor in unknown state",
+    ErrorCode.STEPPER_BUSY:                     "stepper motor is busy",
+    ErrorCode.SERVO_BUSY:                       "servo is busy",
+    ErrorCode.GEN4_uLCD_NOT_DETECTED:           "display not detected",
+    ErrorCode.GEN4_uLCD_WRITE_OBJ_FAIL:         "display write object fail",
+    ErrorCode.GEN4_uLCD_WRITE_OBJ_TIMEOUT:      "display write object timeout",
+    ErrorCode.GEN4_uLCD_WRITE_CONTRAST_FAIL:    "display write contrast fail",
+    ErrorCode.GEN4_uLCD_WRITE_CONTRAST_TIMEOUT: "display write contrast timeout",
+    ErrorCode.GEN4_uLCD_READ_OBJ_FAIL:          "display read object fail",
+    ErrorCode.GEN4_uLCD_READ_OBJ_TIMEOUT:       "display read object timeout",
+    ErrorCode.GEN4_uLCD_CMD_BAD_FORM_INDEX:     "display wrong form index",
+    ErrorCode.GEN4_uLCD_WRITE_STR_TOO_BIG:      "display write string too big",
+    ErrorCode.GEN4_uLCD_WRITE_STRING_FAIL:      "display write string fail",
+    ErrorCode.GEN4_uLCD_WRITE_STRING_TIMEOUT:   "display write string timeout",
+    ErrorCode.GEN4_uLCD_BUTTON_FORM_INACTIVE:   "display button form is inactive",
+    ErrorCode.QUOTE_ERROR: "quote error in command",
+    
+
+    ErrorCode.BAD_COMPORT_OPEN: "Cannot open com port",
+    ErrorCode.UNKNOWN_COM_PORT: "unknown com port",
+    ErrorCode.BAD_COMPORT_READ: "bad comport read",
+    ErrorCode.BAD_COMPORT_WRITE: "bad com port write",
+    ErrorCode.NULL_EMPTY_STRING: "null string",
+    ErrorCode.BAD_COMPORT_CLOSE: "bad com port close",
+    ErrorCode.BAD_STRING_PARSE: "fail in string parse",
+    ErrorCode.BAD_JOINT_CODE: "bad joint code",
+    ErrorCode.BAD_SERVO_POSITION: "bad servo position",
+    ErrorCode.BAD_SPEED_VALUE: "bad speed value",
+    ErrorCode.FILE_NOT_FOUND: "file not found",
+    ErrorCode.COMMAND_FILE_NOT_FOUND: "command file not found",
+}
+
+
+def speak_error(err_code: ErrorCode) -> None:
+    pass
