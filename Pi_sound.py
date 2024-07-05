@@ -14,7 +14,7 @@ import Sys_err
 
 from playsound  import  *
 # import Command_IO
-# from Command_IO import  ErrorCode
+# from Command_IO import  MessageCode
 from Globals    import  *
 from Constants  import  *
 
@@ -26,12 +26,12 @@ def init_sound_output():
     __engine.setProperty('voice', voices[1].id)
     print(f"sound_dir = {_sound_dir}")
 
-def play_sound_file(filename: str, block: bool) -> Sys_err.ErrorCode:
+def play_sound_file(filename: str, block: bool) -> Sys_err.MessageCode:
     file = os.path.join(_sound_dir, filename)
     if os.path.isfile(file):
         playsound(file, block)
-        return Sys_err.ErrorCode.OK
-    return Sys_err.ErrorCode.FILE_NOT_FOUND
+        return Sys_err.MessageCode.OK
+    return Sys_err.MessageCode.FILE_NOT_FOUND
     
 
 def play_TTS_string(sentence, block):

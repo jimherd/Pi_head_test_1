@@ -2,7 +2,7 @@
 #
 # Module : Pi_the_robot
 #
-#from  Command_IO import ErrorCode
+#from  Command_IO import MessageCode
 import Command_IO 
 import Sys_err
 from Globals    import  *
@@ -13,19 +13,19 @@ from Sequences  import  *
 
 # ===========================================================================
         
-# def init_sys(comport: str) -> Command_IO.ErrorCode:
+# def init_sys(comport: str) -> Command_IO.MessageCode:
 #     Command_IO.init()
 #     if (Sys_values.TEST_MODE == False):
 #         status = Command_IO.open_port(Sys_strings.PI_HEAD_COM_PORT, Sys_values.PI_HEAD_BAUD_RATE)
-#         if ( status !=  Command_IO.ErrorCode.OK):
+#         if ( status !=  Command_IO.MessageCode.OK):
 #             sys_print("Fail to open port")
 #             return status
 #         status = Command_IO.ping()
-#         if ( status !=  Command_IO.ErrorCode.OK):
+#         if ( status !=  Command_IO.MessageCode.OK):
 #             sys_print("Fail to Ping board")
 #             return status
 #     init_sound_output()
-#     return Command_IO.ErrorCode.OK
+#     return Command_IO.MessageCode.OK
 #
 # print if in debug mode
 #
@@ -36,20 +36,20 @@ def sys_print(*args) -> None:
         args_str = ','.join(map(str,args))
         print(args_str)
 
-def speak_error(err_code: Sys_err.ErrorCode) -> None:
+def speak_message(err_code: Sys_err.MessageCode) -> None:
     play_TTS_string(Sys_err.Error_String_dict[err_code], True)
 
-def run_sys() -> Sys_err.ErrorCode:
+def run_sys() -> Sys_err.MessageCode:
 #    Command_IO.run_file_sequence("seq0.txt")
     status = Command_IO.run_file_sequence("blink.txt")
-    if (status != Sys_err.ErrorCode.OK):
+    if (status != Sys_err.MessageCode.OK):
         return status
     status = Command_IO.run_file_sequence("wink.txt")
-    if (status != Sys_err.ErrorCode.OK):
+    if (status != Sys_err.MessageCode.OK):
         return status
     return status
 
-def blink(number: int, speed: int, time: int) -> Sys_err.ErrorCode:
+def blink(number: int, speed: int, time: int) -> Sys_err.MessageCode:
     for x in range(number):
         Command_IO.Execute_servo_cmd(Command_IO.Joints.LEFT_EYE_LID, 
                                     Command_IO.servo_data[Command_IO.Joints.LEFT_EYE_LID][2],
@@ -69,6 +69,6 @@ def blink(number: int, speed: int, time: int) -> Sys_err.ErrorCode:
                                     speed,
                                     False)
 
-def wink (number: int, left: bool, sound: bool) -> Sys_err.ErrorCode:
+def wink (number: int, left: bool, sound: bool) -> Sys_err.MessageCode:
     pass
 
