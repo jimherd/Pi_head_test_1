@@ -1,10 +1,17 @@
 #
-# sys_err : list of system error codes
+# Messages.py : list of system message codes
 #
+#    Codes                  Intent
+#    =====                  ======
+#    +1 => +99       information codes-
+#        0            OK : successful execution of action
+#  -100 => -199      error codes from microcontroller
+#  -200 => -299      errorfrom PC/Rasperry Pi
 
 from enum import Enum, IntEnum
 
 class MessageCode(IntEnum):
+    COM_PORT_OPEN_OK                 = 1
     OK                               = 0,
     LETTER_ERROR                     = -100,   # rp2040 generated errors
     DOT_ERROR                        = -101,
@@ -55,7 +62,8 @@ class MessageCode(IntEnum):
     LAST_ENTRY                      = -10000
 
 
-Error_String = [
+Message_string = [
+    [MessageCode.COM_PORT_OPEN_OK, "COM port now open"],
     [MessageCode.OK, "All is OK"],
     [MessageCode.LETTER_ERROR, "letter in number string"],
     [MessageCode.DOT_ERROR, "dot error in number string"],
@@ -106,7 +114,7 @@ Error_String = [
 ]
 
 
-Error_String_dict = {
+Message_string_dict = {
     MessageCode.OK:                              "All is OK",
     MessageCode.LETTER_ERROR:                    "letter in number string",
     MessageCode.DOT_ERROR:                       "dot error in number string",
@@ -154,5 +162,3 @@ Error_String_dict = {
     MessageCode.FILE_NOT_FOUND:                   "file not found",
     MessageCode.COMMAND_FILE_NOT_FOUND:           "command file not found",
 }
-
-speak_message

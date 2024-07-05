@@ -6,7 +6,7 @@ import Pi_the_robot
 import Command_IO
 import Globals
 
-import Sys_err
+import Messsages
 from Pi_sound     import  *
 from Constants    import  *
 
@@ -24,7 +24,7 @@ def main():
         Command_IO.Pi_head_com_port = sys.argv[1]
 
     status = Command_IO.init_sys(Command_IO.Pi_head_com_port)
-    if (status != Sys_err.MessageCode.OK):
+    if (status != Messsages.MessageCode.OK):
         Pi_the_robot.sys_print(status)
         Pi_the_robot.speak_message(status)
         time.sleep(5)
