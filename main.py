@@ -15,7 +15,7 @@ from Constants    import  *
 #
 def main():
     Globals.check_platform()
-    if (get_platform() == This_platform.LINUX):
+    if (Globals.get_platform() == This_platform.LINUX):
         Command_IO.Pi_head_com_port = Sys_strings.PI_COM_PORT
     else:
         Command_IO.Pi_head_com_port = Sys_strings.WIN_COM_PORT

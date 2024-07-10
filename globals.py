@@ -12,6 +12,7 @@ current_platform_name = ""
 current_platform = This_platform.UNKNOWN
 
 def check_platform() -> None:
+    global current_platform_name, current_platform
     current_platform_name = platform.system()
     if (current_platform_name == "Windows"):
         current_platform = This_platform.WINDOWS
