@@ -1,6 +1,7 @@
 # This Python file uses the following encoding: utf-8
 
 import serial
+import serial.tools.list_ports
 import random
 import time
 import os
@@ -17,6 +18,8 @@ import Globals
 from Constants import *
 from Pi_sound import *
 from Sequences import *
+
+import Comms_IO
 
 Pi_head_com_port = ""
 MAX_COMMAND_PARAMETERS = 10
@@ -143,6 +146,7 @@ reply_string: str = ""
 reply_tmp_byte_string: str = ""
 
 def command_IO_init() -> None:
+    Comms_IO.get_coms_info()
     global ser
     ser = serial.Serial()
     argc = 0
@@ -418,3 +422,4 @@ def run_file_sequence(filename: str) -> Messsages.MessageCode:
 
     status = run_sequence(cmd_list)
     Pi_the_robot.sys_print("sequence : ", filename, " status = ", status)
+
