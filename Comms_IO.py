@@ -1,4 +1,6 @@
-
+#
+# from Linux clone
+#
 import  serial.tools.list_ports
 
 def get_coms_info():
