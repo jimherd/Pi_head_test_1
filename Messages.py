@@ -59,6 +59,7 @@ class MessageCode(IntEnum):
     BAD_SPEED_VALUE                 = -209,
     FILE_NOT_FOUND                  = -210,
     COMMAND_FILE_NOT_FOUND          = -211,
+    NO_COM_PORT_FOUND               = -212
     LAST_ENTRY                      = -10000
 
 
@@ -110,7 +111,8 @@ Message_string = [
     [MessageCode.BAD_SERVO_POSITION,"bad servo position"],
     [MessageCode.BAD_SPEED_VALUE,"bad speed value"],
     [MessageCode.FILE_NOT_FOUND,"file not found"],
-    [MessageCode.COMMAND_FILE_NOT_FOUND,"command file not found"]
+    [MessageCode.COMMAND_FILE_NOT_FOUND,"command file not found"],
+    [MessageCode.NO_COM_PORT_FOUND,"no com port found"],
 ]
 
 
@@ -161,4 +163,5 @@ Message_string_dict = {
     MessageCode.BAD_SPEED_VALUE:                  "bad speed value",
     MessageCode.FILE_NOT_FOUND:                   "file not found",
     MessageCode.COMMAND_FILE_NOT_FOUND:           "command file not found",
+    MessageCode.NO_COM_PORT_FOUND:                "no com port found"
 }

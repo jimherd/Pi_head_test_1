@@ -4,7 +4,7 @@
 #
 #from  Command_IO import MessageCode
 import Command_IO 
-import Messsages
+import Messages
 from Globals    import  *
 from Constants  import  *
 from Pi_sound   import  *
@@ -36,20 +36,20 @@ def sys_print(*args) -> None:
         args_str = ','.join(map(str,args))
         print(args_str)
 
-def speak_message(err_code: Messsages.MessageCode) -> None:
-    play_TTS_string(Messsages.Message_string_dict[err_code], True)
+def speak_message(err_code: Messages.MessageCode) -> None:
+    play_TTS_string(Messages.Message_string_dict[err_code], True)
 
-def run_sys() -> Messsages.MessageCode:
+def run_sys() -> Messages.MessageCode:
 #    Command_IO.run_file_sequence("seq0.txt")
     status = Command_IO.run_file_sequence("blink.txt")
-    if (status != Messsages.MessageCode.OK):
+    if (status != Messages.MessageCode.OK):
         return status
     status = Command_IO.run_file_sequence("wink.txt")
-    if (status != Messsages.MessageCode.OK):
+    if (status != Messages.MessageCode.OK):
         return status
     return status
 
-def blink(number: int, speed: int, time: int) -> Messsages.MessageCode:
+def blink(number: int, speed: int, time: int) -> Messages.MessageCode:
     for x in range(number):
         Command_IO.Execute_servo_cmd(Command_IO.Joints.LEFT_EYE_LID, 
                                     Command_IO.servo_data[Command_IO.Joints.LEFT_EYE_LID][2],
@@ -69,6 +69,6 @@ def blink(number: int, speed: int, time: int) -> Messsages.MessageCode:
                                     speed,
                                     False)
 
-def wink (number: int, left: bool, sound: bool) -> Messsages.MessageCode:
+def wink (number: int, left: bool, sound: bool) -> Messages.MessageCode:
     pass
 

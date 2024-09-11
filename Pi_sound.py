@@ -10,7 +10,7 @@ import os
 import time
 import pyttsx3
 
-import Messsages
+import Messages
 
 from playsound  import  *
 # import Command_IO
@@ -26,12 +26,12 @@ def init_sound_output():
     __engine.setProperty('voice', voices[1].id)
     print(f"sound_dir = {_sound_dir}")
 
-def play_sound_file(filename: str, block: bool) -> Messsages.MessageCode:
+def play_sound_file(filename: str, block: bool) -> Messages.MessageCode:
     file = os.path.join(_sound_dir, filename)
     if os.path.isfile(file):
         playsound(file, block)
-        return Messsages.MessageCode.OK
-    return Messsages.MessageCode.FILE_NOT_FOUND
+        return Messages.MessageCode.OK
+    return Messages.MessageCode.FILE_NOT_FOUND
     
 
 def play_TTS_string(sentence, block):
