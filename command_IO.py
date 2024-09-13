@@ -1,5 +1,5 @@
 # This Python file uses the following encoding: utf-8
-
+#
 import serial
 import serial.tools.list_ports
 import random

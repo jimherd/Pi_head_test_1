@@ -12,7 +12,9 @@ from enum import Enum, IntEnum
 
 class MessageCode(IntEnum):
     COM_PORT_OPEN_OK                 = 1
+
     OK                               = 0,
+    
     LETTER_ERROR                     = -100,   # rp2040 generated errors
     DOT_ERROR                        = -101,
     PLUSMINUS_ERROR                  = -102,
@@ -46,7 +48,6 @@ class MessageCode(IntEnum):
     GEN4_uLCD_BUTTON_FORM_INACTIVE   = -130,
     QUOTE_ERROR                      = -131,
     
-
     BAD_COMPORT_OPEN                = -200     # PC/Pi errors
     UNKNOWN_COM_PORT                = -201
     BAD_COMPORT_READ                = -202

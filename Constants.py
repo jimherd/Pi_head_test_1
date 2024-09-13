@@ -1,5 +1,5 @@
 # This Python file uses the following encoding: utf-8
-
+#
 # note :  ._name is the convention to indicate non-public attributes
 
 from enum import Enum, IntEnum, StrEnum
