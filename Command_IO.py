@@ -136,6 +136,9 @@ class StepperCommands(IntEnum):
     ABS_MOVE_SYNC      = 3
     CALIBRATE          = 4
 
+class NeopixelCommands(IntEnum):
+    BLANK_ALL          = 0
+
 current_pose   = arr.array('i', repeat(0, (Sys_values.NOS_SERVOS + Sys_values.NOS_STEPPERS)))
 
 argc: int = 0
