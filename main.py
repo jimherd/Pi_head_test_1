@@ -5,16 +5,26 @@ import time
 import Pi_the_robot
 import Command_IO
 import Globals
+import IMX500_sys
 
 import Messages
 from Pi_sound     import  *
 from Constants    import  *
+from IMX500_sys   import  *
+
+import cv2
+import numpy as np
+from functools import lru_cache
 
 # ===========================================================================
 # Main call
 #
 def main():
     init_sound_output()
+    imx500_init()
+
+    run_detect()    # temp test
+
     Globals.check_platform()
     Command_IO.Pi_head_com_port = Globals.get_COM_port(Globals.get_platform())
     if (Command_IO.Pi_head_com_port == "None"):
@@ -33,6 +43,7 @@ def main():
         time.sleep(5)
         return
     play_TTS_string(Sys_strings.INTRO_STRING, True)
+
     Pi_the_robot.sys_print("Hello")
     Pi_the_robot.run_sys()
     

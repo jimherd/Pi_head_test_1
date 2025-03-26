@@ -7,6 +7,7 @@ import sys
 import cv2
 import numpy as np
 from functools import lru_cache
+from time import sleep
 
 from picamera2 import MappedArray, Picamera2
 from picamera2.devices import IMX500
@@ -152,5 +153,11 @@ def run_detect():
     while True:
         global last_results
         last_results = parse_detections(picam2.capture_metadata())
+
+        if (len(last_results) > 0):
+            for result in last_results:
+                if result.category == 0:
+                    print("Person detected")
+        sleep(1)
 
         
