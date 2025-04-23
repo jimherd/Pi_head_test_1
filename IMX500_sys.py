@@ -157,7 +157,17 @@ def run_detect():
         if (len(last_results) > 0):
             for result in last_results:
                 if result.category == 0:
+                    print(result)
                     print("Person detected")
         sleep(1)
 
+def get_detections():
+    """get image detections"""
+    global last_results
+    last_results = parse_detections(picam2.capture_metadata())
+
+    if (len(last_results) > 0):
+        for result in last_results:
+            if result.category == 0:
+                print("Person detected")
         

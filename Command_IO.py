@@ -15,9 +15,10 @@ import Command_IO
 
 import Pi_the_robot
 import Globals
-from Constants import *
-from Pi_sound import *
-from Sequences import *
+from Constants  import *
+from Pi_sound   import *
+from Sequences  import *
+from IMX500_sys import *
 
 import Comms_IO
 
@@ -358,6 +359,9 @@ def read_button(button_index: int) -> Messages.MessageCode:
     return status
 
 # ===========================================================================
+# Video code
+
+# ===========================================================================
 # run sequences of commands from a list
 #
 # check for local commands (speak, ...) before sending remote command
@@ -369,6 +373,10 @@ def run_sequence(sequence) -> Messages.MessageCode:
 
 # execute command
         match cmd_argv[0]:
+            case "video":
+                for count in range(cmd_argv[1]):  # number of image processing cycles
+                    get_detections()
+                    sleep(cmd_argv[2] * 0.1)    # delay between frames in units of 0.1sec
             case "speak":
                 say_list = cmd_argv[3:]
                 sentence = " ".join(say_list)
