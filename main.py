@@ -23,7 +23,7 @@ def main():
     init_sound_output()
     imx500_init()
 
-    run_detect()    # temp test
+    # run_detect()    # temp test
 
     Globals.check_platform()
     Command_IO.Pi_head_com_port = Globals.get_COM_port(Globals.get_platform())
