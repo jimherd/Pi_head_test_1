@@ -26,7 +26,7 @@ from functools import lru_cache
 def main():
     #init_sound_output()
     imx500_init()
-    Pi_sound.say_espeak("Hello, I am Pi the robot. I am ready to assist you.")
+    Pi_sound.say_espeak("Hello, I am Pi the robot. I am ready to help you.")
 
     # run_detect()    # temp test
 

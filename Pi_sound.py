@@ -50,14 +50,15 @@ def say_espeak(phrase: str, volume: int = 100) -> None:
     
     Args:
         phrase (str): The text to be spoken.
+        volume (int, optional): The volume for speech synthesis (default is 100).
     """
-    phrase = phrase.replace("I'm", "I m")
-    phrase = phrase.replace("'", "")
-    phrase = phrase.replace('"', ' quote ')
-    phrase = phrase.replace('*', "")
+    # phrase = phrase.replace("I'm", "I m")
+    # phrase = phrase.replace("'", "")
+    # phrase = phrase.replace('"', ' quote ')
+    # phrase = phrase.replace('*', "")
 
     try:
-        cmd = f"espeak-ng -s{volume} -ven+f5 '{phrase}'"
+        cmd = f"espeak-ng -s150 -a{volume} -ven+robosoft2 '{phrase}'"
         py3_out = subprocess.check_output(cmd, shell=True)
         print(f"Espeak-ng command : {cmd}")
 
