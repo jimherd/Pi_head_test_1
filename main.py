@@ -5,10 +5,14 @@ import time
 import Pi_the_robot
 import Command_IO
 import Globals
+import asyncio
 import IMX500_sys
+import Pi_sound
+#import TTS
+
 
 import Messages
-from Pi_sound     import  *
+#from Pi_sound     import  *
 from Constants    import  *
 from IMX500_sys   import  *
 
@@ -20,10 +24,11 @@ from functools import lru_cache
 # Main call
 #
 def main():
-    init_sound_output()
+    #init_sound_output()
     imx500_init()
+    Pi_sound.say_espeak("Hello, I am Pi the robot. I am ready to assist you.")
 
-    run_detect()    # temp test
+    # run_detect()    # temp test
 
     Globals.check_platform()
     Command_IO.Pi_head_com_port = Globals.get_COM_port(Globals.get_platform())
@@ -42,7 +47,7 @@ def main():
         Pi_the_robot.speak_message(status)
         time.sleep(5)
         return
-    play_TTS_string(Sys_strings.INTRO_STRING, True)
+    Pi_sound.say_espeak(Sys_strings.INTRO_STRING)
 
     Pi_the_robot.sys_print("Hello")
     Pi_the_robot.run_sys()
