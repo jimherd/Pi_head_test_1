@@ -7,6 +7,7 @@
 #        __sound_dir   module
 
 import os
+import subprocess
 import time
 import pyttsx3
 
@@ -43,5 +44,36 @@ def TTS_wait_finish():
     while (__engine.isBusy == True):
         time.sleep(0.1)
 
+def say_espeak(phrase: str, volume: int = 100) -> None:
+    """
+    Uses the 'espeak-ng' command-line tool to convert text to speech.
+    
+    Args:
+        phrase (str): The text to be spoken.
+        volume (int, optional): The volume for speech synthesis (default is 100).
+    """
+    # phrase = phrase.replace("I'm", "I m")
+    # phrase = phrase.replace("'", "")
+    # phrase = phrase.replace('"', ' quote ')
+    # phrase = phrase.replace('*', "")
+
+    try:
+        cmd = f"espeak-ng -s150 -a{volume} -ven+robosoft2 '{phrase}'"
+        py3_out = subprocess.check_output(cmd, shell=True)
+        print(f"Espeak-ng command : {cmd}")
+
+    except FileNotFoundError:
+        print("Error: 'espeak' command not found. Please install it.")
+    except subprocess.CalledProcessError as e:
+        print(f"Error during speech synthesis: {e}")
+
+def say(phrase: str, volume: int = 150) -> None:
+    say_espeak(phrase, volume)
+
+def shout(phrase: str, volume: int = 250) -> None:
+    say_espeak(phrase, volume)
+
+def whisper(phrase: str, volume: int = 50) -> None:
+    say_espeak(phrase, volume)
 
 

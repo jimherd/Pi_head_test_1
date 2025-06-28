@@ -28,7 +28,7 @@ def get_platform_name():
     return current_platform_name
 
 FTDI_VID     = 0x403
-FTDI_232_PID = 0x6001
+FTDI_232_PID = 0x6015
 
 def get_COM_port(platform : This_platform):
     if (platform == This_platform.LINUX):

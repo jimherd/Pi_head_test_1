@@ -22,7 +22,8 @@ class servo_type(IntEnum):
 
 class Sys_strings(StrEnum):
     WIN_COM_PORT = "com4"
-    PI_COM_PORT  = "/dev/serial0"
+ #   PI_COM_PORT  = "/dev/serial0"
+    PI_COM_PORT = "/dev/ttyUSB0"  # Updated for Linux, typically used for USB serial devices
     INTRO_STRING = "Hello"
 
 class This_platform(IntEnum):

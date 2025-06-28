@@ -9,6 +9,8 @@ from Constants  import  *
 from Pi_sound   import  *
 from Sequences  import  *
 
+import asyncio
+
 
 # ===========================================================================
         
