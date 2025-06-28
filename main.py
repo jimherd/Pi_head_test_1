@@ -21,7 +21,7 @@ from functools import lru_cache
 #
 def main():
     init_sound_output()
-    imx500_init()
+    # imx500_init()
 
     # run_detect()    # temp test
 
