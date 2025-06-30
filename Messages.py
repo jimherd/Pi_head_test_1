@@ -145,7 +145,7 @@ Message_string_dict = {
 #     [MessageCode.GEN4_uLCD_READ_OBJ_FAIL,"display read object fail"],
 #     [MessageCode.GEN4_uLCD_READ_OBJ_TIMEOUT,"display read object timeout"],
 #     [MessageCode.GEN4_uLCD_CMD_BAD_FORM_INDEX,"display wrong form index"],
-#     [MessageCode.GEN4_uLCD_WRITE_pyttsx3STR_TOO_BIG,"display write string too big"],
+#     [MessageCode.GEN4_uLCD_WRITE_STR_TOO_BIG,"display write string too big"],
 #     [MessageCode.GEN4_uLCD_WRITE_STRING_FAIL,"display write string fail"],
 #     [MessageCode.GEN4_uLCD_WRITE_STRING_TIMEOUT,"display write string timeout"],
 #     [MessageCode.GEN4_uLCD_BUTTON_FORM_INACTIVE,"display button form is inactive"],
