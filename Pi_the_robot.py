@@ -4,9 +4,11 @@
 #from  Command_IO import MessageCode
 import Command_IO 
 import Messages
+import Pi_sound
+
 from Globals    import  *
 from Constants  import  *
-from Pi_sound   import  *
+
 from Sequences  import  *
 
 import asyncio
@@ -64,7 +66,7 @@ def speak_message(err_code: Messages.MessageCode) -> None:
     Returns:
         None
     """
-    play_TTS_string(Messages.Message_string_dict[err_code], True)
+    Pi_sound.say_espeak(Messages.Message_string_dict[err_code])
 
 def run_sys() -> Messages.MessageCode:
     """

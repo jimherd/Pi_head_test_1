@@ -98,19 +98,19 @@ Message_string_dict = {
     MessageCode.GEN4_uLCD_BUTTON_FORM_INACTIVE:   "display button form is inactive",
     MessageCode.QUOTE_ERROR:                      "quote error in command",
     
-    MessageCode.BAD_COMPORT_OPEN:                 "Cannot open com port",
-    MessageCode.UNKNOWN_COM_PORT:                 "unknown com port",
-    MessageCode.BAD_COMPORT_READ:                 "bad comport read",
-    MessageCode.BAD_COMPORT_WRITE:                "bad com port write",
+    MessageCode.BAD_COMPORT_OPEN:                 "Cannot open serial port",
+    MessageCode.UNKNOWN_COM_PORT:                 "unknown serial port",
+    MessageCode.BAD_COMPORT_READ:                 "cannot read from serial port",
+    MessageCode.BAD_COMPORT_WRITE:                "bad serial port write",
     MessageCode.NULL_EMPTY_STRING:                "null string",
-    MessageCode.BAD_COMPORT_CLOSE:                "bad com port close",
+    MessageCode.BAD_COMPORT_CLOSE:                "bad serial port close",
     MessageCode.BAD_STRING_PARSE:                 "fail in string parse",
     MessageCode.BAD_JOINT_CODE:                   "bad joint code",
     MessageCode.BAD_SERVO_POSITION:               "bad servo position",
     MessageCode.BAD_SPEED_VALUE:                  "bad speed value",
     MessageCode.FILE_NOT_FOUND:                   "file not found",
     MessageCode.COMMAND_FILE_NOT_FOUND:           "command file not found",
-    MessageCode.NO_COM_PORT_FOUND:                "no com port found"
+    MessageCode.NO_COM_PORT_FOUND:                "no serial port found"
 }
 #
 # replaced with dictionary

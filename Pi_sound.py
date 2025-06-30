@@ -23,8 +23,8 @@ _sound_dir = os.path.join(os.getcwd(), "Media", "Sounds")
 __engine = pyttsx3.init()
 
 def init_sound_output():
-    voices = __engine.getProperty('voices')  # getting details of current voice
-    __engine.setProperty('voice', voices[1].id)
+    # voices = __engine.getProperty('voices')  # getting details of current voice
+    # __engine.setProperty('voice', voices[1].id)
     print(f"sound_dir = {_sound_dir}")
 
 def play_sound_file(filename: str, block: bool) -> Messages.MessageCode:
@@ -35,14 +35,14 @@ def play_sound_file(filename: str, block: bool) -> Messages.MessageCode:
     return Messages.MessageCode.FILE_NOT_FOUND
     
 
-def play_TTS_string(sentence, block):
-    __engine.say(sentence)
-    if (block == True):
-        __engine.runAndWait()
+# def play_TTS_string(sentence, block):
+#     __engine.say(sentence)
+#     if (block == True):
+#         __engine.runAndWait()
 
-def TTS_wait_finish():
-    while (__engine.isBusy == True):
-        time.sleep(0.1)
+# def TTS_wait_finish():
+#     while (__engine.isBusy == True):
+#         time.sleep(0.1)
 
 def say_espeak(phrase: str, volume: int = 100) -> None:
     """
@@ -58,7 +58,7 @@ def say_espeak(phrase: str, volume: int = 100) -> None:
     # phrase = phrase.replace('*', "")
 
     try:
-        cmd = f"espeak-ng -s150 -a{volume} -ven+robosoft2 '{phrase}'"
+        cmd = f"espeak-ng -s120 -a{volume} -ven+robosoft3 '{phrase}'"
         py3_out = subprocess.check_output(cmd, shell=True)
         print(f"Espeak-ng command : {cmd}")
 
