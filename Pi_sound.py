@@ -9,7 +9,7 @@
 import os
 import subprocess
 import time
-import pyttsx3
+#import pyttsx3
 
 import Messages
 
@@ -20,7 +20,7 @@ from Globals    import  *
 from Constants  import  *
 
 _sound_dir = os.path.join(os.getcwd(), "Media", "Sounds")
-__engine = pyttsx3.init()
+#__engine = pyttsx3.init()
 
 def init_sound_output():
     # voices = __engine.getProperty('voices')  # getting details of current voice
