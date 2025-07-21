@@ -69,6 +69,7 @@ def speak_message(err_code: Messages.MessageCode) -> None:
     Pi_sound.say_espeak(Messages.Message_string_dict[err_code])
 
 def run_sys() -> Messages.MessageCode:
+    
     """
     Runs a sequence of commands to control the robot's actions.
 

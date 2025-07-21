@@ -322,7 +322,7 @@ def check_joint_data(joint: int, position: int, speed: int) -> Messages.MessageC
     if ((joint < FIRST_JOINT) or (joint > LAST_JOINT)):
         return Messages.MessageCode.BAD_JOINT_CODE
     if ((position < servo_data[joint][2]) or (position > servo_data[joint][3])):
-        return Messages.MessageCode.BAD_SERVO_POSITION
+        return Messages.MessageCode.BAD_SERVO_POSITIONplay_TTS_string
     if ((position < servo_data[joint][4]) or (position > servo_data[joint][5])):
         return Messages.MessageCode.BAD_SPEED_VALUE
     return Messages.MessageCode.OK
