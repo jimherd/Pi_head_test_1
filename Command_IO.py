@@ -60,59 +60,15 @@ servo_data = [
 ]
 
 class Display_commands(IntEnum):
-    SET_FORM      = 0
-    GET_FORM      = 1
-    SET_CONTRAST  = 2
-    READ_BUTTON   = 3
-
-# class MessageCode(IntEnum):
-#     OK                               = 0,
-#     LETTER_ERROR                     = -100,   # rp2040 generated errors
-#     DOT_ERROR                        = -101,
-#     PLUSMINUS_ERROR                  = -102,
-#     BAD_COMMAND                      = -103,
-#     BAD_PORT_NUMBER                  = -104,
-#     BAD_NOS_PARAMETERS               = -105,
-#     BAD_BASE_PARAMETER               = -106,
-#     PARAMETER_OUTWITH_LIMITS         = -107,
-#     BAD_SERVO_COMMAND                = -108,
-#     STEPPER_CALIBRATE_FAIL           = -109,
-#     BAD_STEPPER_COMMAND              = -110,
-#     BAD_STEP_VALUE                   = -111,
-#     MOVE_ON_UNCALIBRATED_MOTOR       = -112,
-#     EXISTING_FAULT_WITH_MOTOR        = -113,
-#     SM_MOVE_TOO_SMALL                = -114,
-#     LIMIT_SWITCH_ERROR               = -115,
-#     UNKNOWN_STEPPER_MOTOR_STATE      = -116,
-#     STEPPER_BUSY                     = -117,
-#     SERVO_BUSY                       = -118,
-#     GEN4_uLCD_NOT_DETECTED           = -119,
-#     GEN4_uLCD_WRITE_OBJ_FAIL         = -120,
-#     GEN4_uLCD_WRITE_OBJ_TIMEOUT      = -121,
-#     GEN4_uLCD_WRITE_CONTRAST_FAIL    = -122,
-#     GEN4_uLCD_WRITE_CONTRAST_TIMEOUT = -123,   
-#     GEN4_uLCD_READ_OBJ_FAIL          = -124,
-#     GEN4_uLCD_READ_OBJ_TIMEOUT       = -125,
-#     GEN4_uLCD_CMD_BAD_FORM_INDEX     = -126,
-#     GEN4_uLCD_WRITE_STR_TOO_BIG      = -127,
-#     GEN4_uLCD_WRITE_STRING_FAIL      = -128,
-#     GEN4_uLCD_WRITE_STRING_TIMEOUT   = -129,
-#     GEN4_uLCD_BUTTON_FORM_INACTIVE   = -130,
-#     QUOTE_ERROR                      = -131,
-    
-
-#     BAD_COMPORT_OPEN                = -200     # PC/Pi errors
-#     UNKNOWN_COM_PORT                = -201
-#     BAD_COMPORT_READ                = -202
-#     BAD_COMPORT_WRITE               = -203
-#     NULL_EMPTY_STRING               = -204
-#     BAD_COMPORT_CLOSE               = -205
-#     BAD_STRING_PARSE                = -206
-#     BAD_JOINT_CODE                  = -207,
-#     BAD_SERVO_POSITION              = -208,
-#     BAD_SPEED_VALUE                 = -209,
-#     FILE_NOT_FOUND                  = -210,
-#     COMMAND_FILE_NOT_FOUND          = -211,
+    SET_uLCF_FORM             = 0
+    GET_uLCD_FORM             = 1
+    SET_uLCD_CONTRAST         = 2
+    READ_uLCD_BUTTON          = 3
+    READ_uLCD_SWITCH          = 4
+    READ_uLCD_OBJECT          = 5
+    READ_uLCD_STRING          = 6
+    WRITE_uLCD_OBJECT         = 7
+    SCAN_uLCD_BUTTON_PRESSES  = 8
 
 class Modes(IntEnum):
     MODE_U = 0
@@ -142,12 +98,18 @@ class NeopixelCommands(IntEnum):
 
 current_pose   = arr.array('i', repeat(0, (Sys_values.NOS_SERVOS + Sys_values.NOS_STEPPERS)))
 
+##########################################################################
+# array structures to hold the parsed ASCII string that is returned
+# from a RP2040 command
+
 argc: int = 0
 int_parameter   = arr.array('i', repeat(0, MAX_COMMAND_PARAMETERS))
 float_parameter = arr.array('f', repeat(0, MAX_COMMAND_PARAMETERS))
 param_type      = arr.array('i', repeat(0, MAX_COMMAND_PARAMETERS))
 reply_string: str = ""
 reply_tmp_byte_string: str = ""
+
+##########################################################################
 
 def command_IO_init() -> None:
     Comms_IO.get_coms_info()
@@ -191,14 +153,14 @@ def close_port() -> Messages.MessageCode:
 
 def send_command(send_string: str) -> Messages.MessageCode:
     if(ser.isOpen() == False):
-        return Messages.MessageCode.BAD_COMPORT_WRITE
+        return Messages.MessageCode.BAD_SERIAL_PORT_WRITE
     ser.write(str.encode(send_string)) # convert to bytes
     return Messages.MessageCode.OK
 
 def get_reply() -> Messages.MessageCode:
     reply_string = ser.read_until(b'\n', 50)
     if (len(reply_string) == 0):
-        return Messages.MessageCode.BAD_COMPORT_READ
+        return Messages.MessageCode.BAD_SERIAL_PORT_READ
     else:
         return Messages.MessageCode.OK
 
@@ -341,8 +303,15 @@ def execute_stepper_cmd(stepper_no, stepper_cmd, stepper_speed_profile, stepper_
 # ===========================================================================
 # Display code
 
-def page_update(page_index) -> Messages.MessageCode:
-    cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.SET_FORM} {page_index}\n")
+def set_display_form(page_index) -> Messages.MessageCode:
+    cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.SET_uLCD_FORM} {page_index}\n")
+    first_val = 0
+    status =  do_command(cmd_string, first_val)
+    Pi_the_robot.sys_print(status)
+    return status
+
+def get_display_form(self) -> Messages.MessageCode:
+    cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.SET_uLCD_FORM}\n")
     first_val = 0
     status =  do_command(cmd_string, first_val)
     Pi_the_robot.sys_print(status)

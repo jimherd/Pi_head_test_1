@@ -50,8 +50,8 @@ class MessageCode(IntEnum):
     
     BAD_COMPORT_OPEN                = -200     # PC/Pi errors
     UNKNOWN_COM_PORT                = -201
-    BAD_COMPORT_READ                = -202
-    BAD_COMPORT_WRITE               = -203
+    BAD_SERIAL_PORT_READ                = -202
+    BAD_SERIAL_PORT_WRITE               = -203
     NULL_EMPTY_STRING               = -204
     BAD_COMPORT_CLOSE               = -205
     BAD_STRING_PARSE                = -206
@@ -100,8 +100,8 @@ Message_string_dict = {
     
     MessageCode.BAD_COMPORT_OPEN:                 "Cannot open serial port",
     MessageCode.UNKNOWN_COM_PORT:                 "unknown serial port",
-    MessageCode.BAD_COMPORT_READ:                 "cannot read from serial port",
-    MessageCode.BAD_COMPORT_WRITE:                "bad serial port write",
+    MessageCode.BAD_SERIAL_PORT_READ:                 "cannot read from serial port",
+    MessageCode.BAD_SERIAL_PORT_WRITE:                "bad serial port write",
     MessageCode.NULL_EMPTY_STRING:                "null string",
     MessageCode.BAD_COMPORT_CLOSE:                "bad serial port close",
     MessageCode.BAD_STRING_PARSE:                 "fail in string parse",
