@@ -111,7 +111,7 @@ Message_string_dict = {
     MessageCode.BAD_SPEED_VALUE:                  "bad speed value",
     MessageCode.FILE_NOT_FOUND:                   "file not found",
     MessageCode.COMMAND_FILE_NOT_FOUND:           "command file not found",
-    MessageCode.NO_COM_PORT_FOUND:                "no serial port found"
+    MessageCode.NO_SERIAL_PORT_FOUND:                "no serial port found"
 }
 #
 # replaced with dictionary
