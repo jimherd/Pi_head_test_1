@@ -165,7 +165,7 @@ def get_reply() -> Messages.MessageCode:
         return Messages.MessageCode.OK
 
 #
-# Dta is returned through global 'int_parameter] array
+# Dta is returned through global 'int_parameter[] array
 
 def do_command(cmd_string: str) -> Messages.MessageCode:
     status = send_command(cmd_string)

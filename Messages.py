@@ -60,7 +60,8 @@ class MessageCode(IntEnum):
     BAD_SPEED_VALUE                 = -209,
     FILE_NOT_FOUND                  = -210,
     COMMAND_FILE_NOT_FOUND          = -211,
-    NO_COM_PORT_FOUND               = -212
+    NO_SERIAL_PORT_FOUND            = -212
+    CONTRAST_OUTWITH_PERCENT_RANGE  = -213
     LAST_ENTRY                      = -10000
 
 Message_string_dict = {
