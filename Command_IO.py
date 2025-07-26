@@ -164,7 +164,10 @@ def get_reply() -> Messages.MessageCode:
     else:
         return Messages.MessageCode.OK
 
-def do_command(cmd_string: str, first_int: int) -> Messages.MessageCode:
+#
+# Dta is returned through global 'int_parameter] array
+
+def do_command(cmd_string: str) -> Messages.MessageCode:
     status = send_command(cmd_string)
     if(status != Messages.MessageCode.OK):
         return status
@@ -172,9 +175,6 @@ def do_command(cmd_string: str, first_int: int) -> Messages.MessageCode:
     if(status != Messages.MessageCode.OK):
         return status
     status = Parse_string(reply_string)
-    if(status != Messages.MessageCode.OK):
-        return status
-    status = int_parameter[1]
     return status
 
 def Parse_string(string_data: str) -> Messages.MessageCode:
@@ -220,8 +220,7 @@ def Parse_string(string_data: str) -> Messages.MessageCode:
 
 def ping() -> Messages.MessageCode:
     cmd_string = "ping 0 " + str(random.randint(1,98)) + "\n"
-    first_val = 0
-    status =  do_command(cmd_string, first_val)
+    status =  do_command(cmd_string)
     Pi_the_robot.sys_print(status)
     return status
 
@@ -247,8 +246,7 @@ def Execute_servo_cmd(joint: int, position: int, speed: int, group: bool) -> Mes
     else:
         cmd_string =(f"servo {Sys_values.DEFAULT_PORT} {servo_cmd} {joint} {position} {speed}\n")
 # execute servo move command
-    first_val = 0
-    status =  do_command(cmd_string, first_val)
+    status =  do_command(cmd_string)
     if (status == Messages.MessageCode.OK):
         current_pose[joint] = position  # record new position
     Pi_the_robot.sys_print(status)
@@ -268,8 +266,7 @@ def Mouth_on_off(mouthstate: bool, group: bool) -> Messages.MessageCode:
         mouth_state = Mouth.OFF
 
     # execute servo move command
-    first_val = 0
-    status =  do_command(cmd_string, first_val)
+    status =  do_command(cmd_string)
     if (status == Messages.MessageCode.OK): 
         if (mouth_state == Mouth.OFF):
             mouth_state = Mouth.ON
@@ -295,8 +292,7 @@ def check_joint_data(joint: int, position: int, speed: int) -> Messages.MessageC
 
 def execute_stepper_cmd(stepper_no, stepper_cmd, stepper_speed_profile, stepper_step_value) -> Messages.MessageCode:
     cmd_string =(f"stepper {Sys_values.DEFAULT_PORT} {stepper_cmd} {stepper_no} {stepper_step_value}\n")
-    first_val = 0
-    status =  do_command(cmd_string, first_val)
+    status =  do_command(cmd_string)
     Pi_the_robot.sys_print(status)
     return status
 
@@ -305,15 +301,13 @@ def execute_stepper_cmd(stepper_no, stepper_cmd, stepper_speed_profile, stepper_
 
 def set_display_form(page_index) -> Messages.MessageCode:
     cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.SET_uLCD_FORM} {page_index}\n")
-    first_val = 0
-    status =  do_command(cmd_string, first_val)
+    status =  do_command(cmd_string)
     Pi_the_robot.sys_print(status)
     return status
 
 def get_display_form(self) -> Messages.MessageCode:
     cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.SET_uLCD_FORM}\n")
-    first_val = 0
-    status =  do_command(cmd_string, first_val)
+    status =  do_command(cmd_string)
     Pi_the_robot.sys_print(status)
     return status
 
@@ -322,8 +316,7 @@ def string_update(self) -> None:
 
 def read_button(button_index: int) -> Messages.MessageCode:
     cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.READ_BUTTON} {button_index}\n")
-    first_val = 0
-    status =  do_command(cmd_string, first_val)
+    status =  do_command(cmd_string)
     Pi_the_robot.sys_print(status)
     return status
 
@@ -376,10 +369,9 @@ def run_sequence(sequence) -> Messages.MessageCode:
                 delay = int(cmd_argv[1])
                 time.sleep(delay)
             case _:          # must be a remote command
-                first_val = 0
                 cmd_string = sequence[i]  + '\n'  #   (f"{sequences[sequence_index][i]}\n")
                 Pi_the_robot.sys_print("cmd =", cmd_string)
-                status =  do_command(cmd_string, first_val)
+                status =  do_command(cmd_string)
                 if (status != Messages.MessageCode.OK):
                     return status
  # exit               
