@@ -31,4 +31,16 @@ class This_platform(IntEnum):
     WINDOWS    = 1
     LINUX      = 2
 
+# class display_cmds(IntEnum):
+#     SET_uLCD_FORM                   = 0
+#     GET_uLCD_FORM                   = 1
+#     SET_uLCD_CONTRAST               = 2
+#     READ_uLCD_BUTTON                = 3
+#     READ_uLCD_SWITCH                = 4
+#     READ_uLCD_OBJECT                = 5
+#     WRITE_uLCD_STRING               = 6
+#     WRITE_uLCD_OBJECT               = 7
+#     SCAN_uLCD_FORM_BUTTON_PRESSES   = 8
+
+
 

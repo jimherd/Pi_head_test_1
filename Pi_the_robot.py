@@ -1,10 +1,13 @@
 #
 # Module : Pi_the_robot
 #
-#from  Command_IO import MessageCode
+import time
+
 import Command_IO 
 import Messages
 import Pi_sound
+import Pi_the_robot
+import display
 
 from Globals    import  *
 from Constants  import  *
@@ -35,6 +38,7 @@ def sys_print(*args) -> None:
         args_str = ','.join(map(str,args))
         print(args_str)
 
+# ===========================================================================
 def speak_message(err_code: Messages.MessageCode) -> None:
     """
     Plays a TTS (Text-to-Speech) string based on the given message code.
@@ -51,6 +55,7 @@ def speak_message(err_code: Messages.MessageCode) -> None:
     """
     Pi_sound.say_espeak(Messages.Message_string_dict[err_code])
 
+# ===========================================================================
 def run_sys() -> Messages.MessageCode:
     
     """
@@ -72,6 +77,7 @@ def run_sys() -> Messages.MessageCode:
         return status
     return status
 
+# ===========================================================================
 def blink(number: int, speed: int, time: int) -> Messages.MessageCode:
     """
     Controls the robot's eyes to blink a specified number of times.
@@ -108,4 +114,13 @@ def blink(number: int, speed: int, time: int) -> Messages.MessageCode:
 
 def wink (number: int, left: bool, sound: bool) -> Messages.MessageCode:
     pass
+
+# ===========================================================================
+def run_display_test() -> None:
+    for i in range(10):
+        display.set_display_contrast(10)
+        time.sleep(5)
+        display.set_display_contrast(90)
+        time.sleep(5)
+    return Messages.MessageCode.OK
 

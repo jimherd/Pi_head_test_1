@@ -88,7 +88,7 @@ class ServoCommands(IntEnum):
 
 class StepperCommands(IntEnum):
     REL_MOVE           = 0
-    ABS_MOVE           = 1
+    ABS_MOVE           = 1  
     REL_MOVE_SYNC      = 2
     ABS_MOVE_SYNC      = 3
     CALIBRATE          = 4
@@ -165,7 +165,7 @@ def get_reply() -> Messages.MessageCode:
         return Messages.MessageCode.OK
 
 #
-# Dta is returned through global 'int_parameter[] array
+# Data is returned through global 'int_parameter[] array
 
 def do_command(cmd_string: str) -> Messages.MessageCode:
     status = send_command(cmd_string)
@@ -366,9 +366,7 @@ def run_sequence(sequence) -> Messages.MessageCode:
                 play_sound_file(cmd_argv[2], block)
             case "delay":
                 delay = int(cmd_argv[1])
-                time.sleep(delay)
-            case "display":
-                pass
+                time.sleep(delay) 
             case _:          # must be a remote command
                 cmd_string = sequence[i]  + '\n'  #   (f"{sequences[sequence_index][i]}\n")
                 Pi_the_robot.sys_print("cmd =", cmd_string)

@@ -50,6 +50,7 @@ def main():
     Pi_sound.say_espeak(Sys_strings.INTRO_STRING)
 
     Pi_the_robot.sys_print("Hello")
+    Pi_the_robot.run_display_test()
     Pi_the_robot.run_sys()
     
 

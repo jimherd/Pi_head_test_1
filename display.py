@@ -36,7 +36,8 @@ def get_display_form() -> Messages.MessageCode:
 def set_display_contrast(contrast : int) -> Messages.MessageCode:
     if ((contrast < 0) or (contrast > 100)) :
         return Messages.MessageCode.CONTRAST_OUTWITH_PERCENT_RANGE
-    cmd_string = (f"display {Sys_values.DEFAULT_PORT} {contrast}\n")
+    cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.SET_uLCD_CONTRAST} {contrast}\n")
+    Pi_the_robot.sys_print(cmd_string)
     status =  do_command(cmd_string)
     Pi_the_robot.sys_print(status)
     return status
