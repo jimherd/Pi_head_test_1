@@ -1,10 +1,6 @@
 #
 # Module : Implement sound and text-to-speech features
 #
-# Globals 
-#         Name         Scope
-#        __engine      module
-#        __sound_dir   module
 
 import os
 import subprocess

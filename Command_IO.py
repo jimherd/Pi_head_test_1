@@ -355,11 +355,10 @@ def run_sequence(sequence) -> Messages.MessageCode:
                         text_line = file.readline()
                         if not text_line:
                             break
-                        play_TTS_string(text_line, block)
-                        TTS_wait_finish()
+                        say_espeak(text_line)
                     file.close()
                 else:
-                    play_TTS_string(sentence, block)
+                    say_espeak(sentence)
             case "plays":
                 block = False
                 if (cmd_argv[1] == "-b"):
@@ -368,6 +367,8 @@ def run_sequence(sequence) -> Messages.MessageCode:
             case "delay":
                 delay = int(cmd_argv[1])
                 time.sleep(delay)
+            case "display":
+                pass
             case _:          # must be a remote command
                 cmd_string = sequence[i]  + '\n'  #   (f"{sequences[sequence_index][i]}\n")
                 Pi_the_robot.sys_print("cmd =", cmd_string)

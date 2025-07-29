@@ -15,23 +15,6 @@ import asyncio
 
 
 # ===========================================================================
-        
-# def init_sys(comport: str) -> Command_IO.MessageCode:
-#     Command_IO.init()
-#     if (Sys_values.TEST_MODE == False):
-#         status = Command_IO.open_port(Sys_strings.PI_HEAD_COM_PORT, Sys_values.PI_HEAD_BAUD_RATE)
-#         if ( status !=  Command_IO.MessageCode.OK):
-#             sys_print("Fail to open port")
-#             return status
-#         status = Command_IO.ping()
-#         if ( status !=  Command_IO.MessageCode.OK):
-#             sys_print("Fail to Ping board")
-#             return status
-#     init_sound_output()
-#     return Command_IO.MessageCode.OK
-#
-# print if in debug mode
-#
 
 def sys_print(*args) -> None:
     """
@@ -73,9 +56,8 @@ def run_sys() -> Messages.MessageCode:
     """
     Runs a sequence of commands to control the robot's actions.
 
-    This function executes a series of file sequences, specifically "blink.txt" and "wink.txt",
-    using the `Command_IO.run_file_sequence` function. It checks the status after each sequence
-    and returns an error code if any of the sequences fail.
+    This function executes a series of commands It checks the status after each command
+    and returns an error code if any of the commabd fails.
 
     Returns:
         Messages.MessageCode: The status code indicating the success or failure of the sequence execution.
