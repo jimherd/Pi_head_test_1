@@ -117,10 +117,14 @@ def wink (number: int, left: bool, sound: bool) -> Messages.MessageCode:
 
 # ===========================================================================
 def run_display_test() -> None:
-    for i in range(10):
+    for i in range(4):
         display.set_display_contrast(10)
-        time.sleep(5)
+        time.sleep(2)
         display.set_display_contrast(90)
-        time.sleep(5)
+        time.sleep(2)
+
+    display.set_display_form(1)
+    time.sleep(5)
+    display.set_display_form(0)
     return Messages.MessageCode.OK
 

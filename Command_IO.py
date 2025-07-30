@@ -60,7 +60,7 @@ servo_data = [
 ]
 
 class Display_commands(IntEnum):
-    SET_uLCF_FORM             = 0
+    SET_uLCD_FORM             = 0
     GET_uLCD_FORM             = 1
     SET_uLCD_CONTRAST         = 2
     READ_uLCD_BUTTON          = 3
