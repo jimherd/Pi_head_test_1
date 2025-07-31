@@ -1,0 +1,12 @@
+{
+    "[python]": {   
+    },
+    "pylint.args": [
+        "--disable=C0103",  // ignore PascalCase naming style
+        "--disable=C0303",  // ignore Trailing white space
+        "--disable=C0114",  // ignore Missing module docstring
+        "--disable=C0115",  // ignore Missing class docstring
+        "--disable=C0116",  // ignore Missing function or method docstring
+        "--disable=C0325",  // ignore Unnecessary parens after 'if' keyword
+    ]
+}
