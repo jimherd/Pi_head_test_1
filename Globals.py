@@ -25,13 +25,13 @@ def check_platform() -> None:
 def get_platform():
     return current_platform
 
-def get_platform_name():
+def get_platform_name() -> str:
     return current_platform_name
 
 FTDI_VID     = 0x403
 FTDI_232_PID = 0x6015
 
-def get_COM_port(the_platform : Constants.This_platform):
+def get_COM_port(the_platform : Constants.This_platform) -> str:
     if (the_platform == Constants.This_platform.LINUX):
         return Constants.Sys_strings.PI_COM_PORT
     if (the_platform == Constants.This_platform.WINDOWS):

@@ -5,7 +5,8 @@ import time
 import Pi_the_robot
 import Command_IO
 import Globals
-import asyncio
+import Constants
+#import asyncio
 import IMX500_sys
 import Pi_sound
 #import TTS
@@ -13,19 +14,19 @@ import Pi_sound
 
 import Messages
 #from Pi_sound     import  *
-from Constants    import  *
-from IMX500_sys   import  *
+#from Constants    import  *
+#from IMX500_sys   import  *
 
-import cv2
-import numpy as np
-from functools import lru_cache
+#import cv2
+#import numpy as np
+#from functools import lru_cache
 
 # ===========================================================================
 # Main call
 #
 def main():
     #init_sound_output()
-    imx500_init()
+    IMX500_sys.imx500_init()
     Pi_sound.say_espeak("Hello, I am Pi the robot. I am ready to help you.")
 
     # run_detect()    # temp test
@@ -33,8 +34,8 @@ def main():
     Globals.check_platform()
     Command_IO.Pi_head_com_port = Globals.get_COM_port(Globals.get_platform())
     if (Command_IO.Pi_head_com_port == "None"):
-        Pi_the_robot.sys_print(Messages.MessageCode.NO_COM_PORT_FOUND)
-        Pi_the_robot.speak_message(Messages.MessageCode.NO_COM_PORT_FOUND)
+        Pi_the_robot.sys_print(Messages.MessageCode.NO_SERIAL_PORT_FOUND)
+        Pi_the_robot.speak_message(Messages.MessageCode.NO_SERIAL_PORT_FOUND)
         time.sleep(2)
         return
 
@@ -47,7 +48,7 @@ def main():
         Pi_the_robot.speak_message(status)
         time.sleep(5)
         return
-    Pi_sound.say_espeak(Sys_strings.INTRO_STRING)
+    Pi_sound.say_espeak(Constants.Sys_strings.INTRO_STRING)
 
     Pi_the_robot.sys_print("Hello")
     Pi_the_robot.run_display_test()
