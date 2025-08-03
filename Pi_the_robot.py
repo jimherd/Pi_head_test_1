@@ -11,8 +11,8 @@ import display
 
 #from Globals    import  *
 #import Globals
-#from Constants  import  *
-import Constants
+from Constants  import  *
+#import Constants
 
 #import Sequences
 
@@ -36,7 +36,7 @@ def sys_print(*args) -> None:
     Returns:
         None
     """
-    if (Constants.Sys_values.DEBUG_MODE is True):
+    if (Sys_values.DEBUG_MODE is True):
         #Iterate over all args, convert them to str, and join them
         args_str = ','.join(map(str,args))
         print(args_str)
@@ -123,15 +123,26 @@ def blink(number: int, speed: int, dwell_time: int) -> Messages.MessageCode:
 #     pass
 
 # ===========================================================================
-def run_display_test() -> None:
+def run_display_test() -> Messages.MessageCode:
     for _ in range(4):
-        display.set_display_contrast(10)
+        status = display.set_display_contrast(10)
+        if (status != Messages.MessageCode.OK): return status
         time.sleep(2)
-        display.set_display_contrast(90)
+        status = display.set_display_contrast(90)
+        if (status != Messages.MessageCode.OK): return status
         time.sleep(2)
 
-    display.set_display_form(1)
+    status = display.set_display_form(1) ; if (status != Messages.MessageCode.OK): return status
     time.sleep(5)
-    display.set_display_form(0)
-    display.set_display_contrast(10)
+    status = display.set_display_form(0)
+    if (status != Messages.MessageCode.OK): return status
+    status = display.set_display_contrast(10)
+    if (status != Messages.MessageCode.OK): return status
+
     return Messages.MessageCode.OK
+
+# ===========================================================================
+def run_program() -> Messages.MessageCode:
+    status = display.set_display_form(forms.FORM0) ; if (status != Messages.MessageCode.OK): return status
+    # 
+    status = display.scan_uLCD_form_for_button_presses()

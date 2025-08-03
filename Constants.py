@@ -30,3 +30,15 @@ class This_platform(IntEnum):
     UNKNOWN    = 0
     WINDOWS    = 1
     LINUX      = 2
+
+class forms(IntEnum):
+    FORM0 = 0
+    FORM1 = 1
+    FORM1 = 2
+    FORM1 = 3
+    FORM1 = 4
+    FORM1 = 5
+    FORM1 = 6
+    FORM1 = 7
+
+

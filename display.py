@@ -46,19 +46,19 @@ def read_display_button(form_index : int, local_index : int) -> Messages.Message
     cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.READ_uLCD_BUTTON}\n")
     status =  do_command(cmd_string)
     Pi_the_robot.sys_print(status)
-    return status
+    return status    # current button value is in 'int_parameter[0]'
 
 def read_display_switch(form_index : int, local_index : int) -> Messages.MessageCode:
     cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.READ_uLCD_SWITCH}\n")
     status =  do_command(cmd_string)
     Pi_the_robot.sys_print(status)
-    return status
+    return status   # current switch value is in 'int_parameter[0]'
 
 def read_object(form_index : int, global_index : int, object_type : int) -> Messages.MessageCode:
-    cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.READ_uLCD_OBJECT} {object_type}\n")
+    cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.READ_uLCD_OBJECT} {global_index} {object_type}\n")
     status =  do_command(cmd_string)
     Pi_the_robot.sys_print(status)
-    return status
+    return status   # current object value is in 'int_parameter[0]'
 
 def write_display_string(form_index : int, local_index : int, text : str) -> Messages.MessageCode:
     cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.WRITE_uLCD_STRING} {local_index} {text}\n")
@@ -72,8 +72,8 @@ def write_object(form_index : int, object_type : int, value : int, ) -> Messages
     Pi_the_robot.sys_print(status)
     return status
 
-def scan_uLCD_form_for_button_presses() -> Messages.MessageCode:
-    cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.SCAN_uLCD_FORM_BUTTON_PRESSES}\n")
+def scan_uLCD_form_for_button_presses(form_index : int) -> Messages.MessageCode:
+    cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.SCAN_uLCD_FORM_BUTTON_PRESSES} {form_index}\n")
     status =  do_command(cmd_string)
     Pi_the_robot.sys_print(status)
     return status       # local index, and press length in 'int_parameter[]' array
