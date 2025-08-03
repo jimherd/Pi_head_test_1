@@ -126,23 +126,30 @@ def blink(number: int, speed: int, dwell_time: int) -> Messages.MessageCode:
 def run_display_test() -> Messages.MessageCode:
     for _ in range(4):
         status = display.set_display_contrast(10)
-        if (status != Messages.MessageCode.OK): return status
+        if (status != Messages.MessageCode.OK): 
+            return status
         time.sleep(2)
         status = display.set_display_contrast(90)
-        if (status != Messages.MessageCode.OK): return status
+        if (status != Messages.MessageCode.OK): 
+            return status
         time.sleep(2)
 
-    status = display.set_display_form(1) ; if (status != Messages.MessageCode.OK): return status
+    status = display.set_display_form(1)
+    if (status != Messages.MessageCode.OK):
+        return status
     time.sleep(5)
     status = display.set_display_form(0)
-    if (status != Messages.MessageCode.OK): return status
+    if (status != Messages.MessageCode.OK): 
+        return status
     status = display.set_display_contrast(10)
-    if (status != Messages.MessageCode.OK): return status
+    if (status != Messages.MessageCode.OK): 
+        return status
 
     return Messages.MessageCode.OK
 
 # ===========================================================================
 def run_program() -> Messages.MessageCode:
-    status = display.set_display_form(forms.FORM0) ; if (status != Messages.MessageCode.OK): return status
+    status = display.set_display_form(forms.FORM0)
+    if (status != Messages.MessageCode.OK): return status
     # 
-    status = display.scan_uLCD_form_for_button_presses()
+    status = display.scan_uLCD_form_for_button_presses(forms.FORM0)

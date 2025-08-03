@@ -21,7 +21,7 @@ from Constants  import *
 # Display functions
 # ===========================================================================
 
-def set_display_form(form_index) -> Messages.MessageCode:
+def set_display_form(form_index: int) -> Messages.MessageCode:
     cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.SET_uLCD_FORM} {form_index}\n")
     status =  do_command(cmd_string)
     Pi_the_robot.sys_print(status)
