@@ -9,7 +9,7 @@
 #    1. Play a sound file mp3/wav on local machine
 #    2. Flip pages on display
 
-sequence0 = [   # power on
+seq0 = [   # power on
         "ping 9 40",
         "servo 9 0 8 45",              # mouth ON
         "speak t w Welcome to the Pi the robot system",
@@ -20,18 +20,20 @@ sequence0 = [   # power on
         "speak f w intro.txt",
         "servo 9 0 8 0",              # mouth OFF
 ]
-sequence1 = [
+seq1 = [
         "ping 9 42",
         "plays mixkit-classic-alarm-995.wav",
 ]
-sequence2 = [
+seq2 = [
         "ping 9 42",
         "display 9 0 1",
         "delay 5",
         "display 9 0 0",
 ]
-sequence3 = [
+seq3 = [
         "ping 9 43",
         "display 9 0 1",
         "display 9 4 0 \"Hello Jim\"",
 ]
+
+sequence = [seq0, seq1, seq2, seq3]

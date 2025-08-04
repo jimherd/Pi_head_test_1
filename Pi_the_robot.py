@@ -3,16 +3,16 @@
 #
 import time
 
-import Command_IO 
+import Command_IO as Cmd
 import Messages
 import Pi_sound
 #import Pi_the_robot
 import display
 
 #from Globals    import  *
-#import Globals
-from Constants  import  *
-#import Constants
+#import Globals as Gbl
+
+import Constants as Cnst
 
 #import Sequences
 
@@ -36,12 +36,12 @@ def sys_print(*args) -> None:
     Returns:
         None
     """
-    if (Sys_values.DEBUG_MODE is True):
+    if (Cnst.Sys_values.DEBUG_MODE is True):
         #Iterate over all args, convert them to str, and join them
         args_str = ','.join(map(str,args))
         print(args_str)
 
-# ===========================================================================
+# ================================================
 def speak_message(err_code: Messages.MessageCode) -> None:
     """
     Plays a TTS (Text-to-Speech) string based on the given message code.
@@ -73,10 +73,10 @@ def run_sys() -> Messages.MessageCode:
         returns the status of the last executed sequence.
     """
 #    Command_IO.run_file_sequence("seq0.txt")
-    status = Command_IO.run_file_sequence("blink.txt")
+    status = Cmd.run_file_sequence("blink.txt")
     if (status != Messages.MessageCode.OK):
         return status
-    status = Command_IO.run_file_sequence("wink.txt")
+    status = Cmd.run_file_sequence("wink.txt")
     if (status != Messages.MessageCode.OK):
         return status
     return status
@@ -101,21 +101,21 @@ def blink(number: int, speed: int, dwell_time: int) -> Messages.MessageCode:
         currently check or return any specific error codes.
     """
     for _ in range(number):
-        Command_IO.Execute_servo_cmd(Command_IO.Joints.LEFT_EYE_LID,
-                                    Command_IO.servo_data[Command_IO.Joints.LEFT_EYE_LID][2],
+        Cmd.Execute_servo_cmd(Cmd.Joints.LEFT_EYE_LID,
+                                    Cmd.servo_data[Cmd.Joints.LEFT_EYE_LID][2],
                                     speed,
                                     False)
-        Command_IO.Execute_servo_cmd(Command_IO.Joints.RIGHT_EYE_LID, 
-                                    Command_IO.servo_data[Command_IO.Joints.RIGHT_EYE_LID][2],
+        Cmd.Execute_servo_cmd(Cmd.Joints.RIGHT_EYE_LID, 
+                                    Cmd.servo_data[Cmd.Joints.RIGHT_EYE_LID][2],
                                     speed,
                                     False)
         time.sleep(dwell_time * 0.1)
-        Command_IO.Execute_servo_cmd(Command_IO.Joints.LEFT_EYE_LID,
-                                    Command_IO.servo_data[Command_IO.Joints.LEFT_EYE_LID][3],
+        Cmd.Execute_servo_cmd(Cmd.Joints.LEFT_EYE_LID,
+                                    Cmd.servo_data[Cmd.Joints.LEFT_EYE_LID][3],
                                     speed,
                                     False)
-        Command_IO.Execute_servo_cmd(Command_IO.Joints.RIGHT_EYE_LID,
-                                    Command_IO.servo_data[Command_IO.Joints.RIGHT_EYE_LID][3],
+        Cmd.Execute_servo_cmd(Cmd.Joints.RIGHT_EYE_LID,
+                                    Cmd.servo_data[Cmd.Joints.RIGHT_EYE_LID][3],
                                     speed,
                                     False)
 
@@ -149,7 +149,14 @@ def run_display_test() -> Messages.MessageCode:
 
 # ===========================================================================
 def run_program() -> Messages.MessageCode:
-    status = display.set_display_form(forms.FORM0)
-    if (status != Messages.MessageCode.OK): return status
-    # 
-    status = display.scan_uLCD_form_for_button_presses(forms.FORM0)
+    status = display.set_display_form(Cnst.forms.FORM0)
+    if (status != Messages.MessageCode.OK): 
+        return status
+    # scan buttons on current form. 
+    #     1. 'local index' is returned in 'int_parameters[0]'
+    #     2. Press time (in units of 100mS) is returned in 'int_parameters[1]'
+    status = display.scan_uLCD_form_for_button_presses(Cnst.forms.FORM0)
+    if (status != Messages.MessageCode.OK): 
+        return status
+    local_id = Cmd.int_parameter[0]
+             

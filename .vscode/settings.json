@@ -3,10 +3,17 @@
     },
     "pylint.args": [
         "--disable=C0103",  // ignore PascalCase naming style
-        "--disable=C0303",  // ignore Trailing white space
         "--disable=C0114",  // ignore Missing module docstring
         "--disable=C0115",  // ignore Missing class docstring
         "--disable=C0116",  // ignore Missing function or method docstring
+        "--disable=C0121",  // ignore ''== True' to be replaced bt 'is True'
+        "--disable=C0200",  // ignore "consider using enumerate"
+        "--disable=C0303",  // ignore Trailing white space
+        "--disable=C0305",  // ignore trailing newlines
         "--disable=C0325",  // ignore Unnecessary parens after 'if' keyword
+
+        "--disable=W0611",  // ignore unused import
+
+        "--max-line-length=120",
     ]
 }

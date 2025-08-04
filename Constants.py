@@ -34,11 +34,11 @@ class This_platform(IntEnum):
 class forms(IntEnum):
     FORM0 = 0
     FORM1 = 1
-    FORM1 = 2
-    FORM1 = 3
-    FORM1 = 4
-    FORM1 = 5
-    FORM1 = 6
-    FORM1 = 7
+    FORM2 = 2
+    FORM3 = 3
+    FORM4 = 4
+    FORM5 = 5
+    FORM6 = 6
+    FORM7 = 7
 
 

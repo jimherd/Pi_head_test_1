@@ -73,7 +73,7 @@ def write_object(form_index : int, object_type : int, value : int, ) -> Messages
     return status
 
 def scan_uLCD_form_for_button_presses(form_index : int) -> Messages.MessageCode:
-    cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.SCAN_uLCD_FORM_BUTTON_PRESSES} {form_index}\n")
+    cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.SCAN_uLCD_BUTTON_PRESSES} {form_index}\n")
     status =  do_command(cmd_string)
     Pi_the_robot.sys_print(status)
     return status       # local index, and press length in 'int_parameter[]' array

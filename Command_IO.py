@@ -1,17 +1,18 @@
 # This Python file uses the following encoding: utf-8
 
-import serial
-import serial.tools.list_ports
 import random
 import time
-import os
 import array as arr
 
 from enum import Enum, IntEnum
 from itertools import repeat
 
+import serial
+import serial.tools.list_ports
+
+
 import Messages
-import Command_IO
+#import Command_IO
 
 import Pi_the_robot
 import Globals
@@ -66,7 +67,7 @@ class Display_commands(IntEnum):
     READ_uLCD_BUTTON          = 3
     READ_uLCD_SWITCH          = 4
     READ_uLCD_OBJECT          = 5
-    READ_uLCD_STRING          = 6
+    WRITE_uLCD_STRING         = 6
     WRITE_uLCD_OBJECT         = 7
     SCAN_uLCD_BUTTON_PRESSES  = 8
 
@@ -113,21 +114,21 @@ reply_tmp_byte_string: str = ""
 
 def command_IO_init() -> None:
     Comms_IO.get_coms_info()
-    global ser
+    global ser              # allow access to serial port from other routines
     ser = serial.Serial()
-    argc = 0
-    int_parameter   = arr.array('i', repeat(0, MAX_COMMAND_PARAMETERS))
-    float_parameter = arr.array('f', repeat(0, MAX_COMMAND_PARAMETERS))
-    param_type      = arr.array('i', repeat(0, MAX_COMMAND_PARAMETERS))
+    # argc = 0
+    # int_parameter   = arr.array('i', repeat(0, MAX_COMMAND_PARAMETERS))
+    # float_parameter = arr.array('f', repeat(0, MAX_COMMAND_PARAMETERS))
+    # param_type      = arr.array('i', repeat(0, MAX_COMMAND_PARAMETERS))
 
 def init_sys(comport: str) -> Messages.MessageCode:
     command_IO_init()
     if (Sys_values.TEST_MODE == False):
-        status = Command_IO.open_port(comport, Sys_values.PI_HEAD_BAUD_RATE)
+        status = open_port(comport, Sys_values.PI_HEAD_BAUD_RATE)
         if ( status !=  Messages.MessageCode.OK):
             Pi_the_robot.sys_print("Fail to open port")
             return status
-        status = Command_IO.ping()
+        status = ping()
         if ( status !=  Messages.MessageCode.OK):
             Pi_the_robot.sys_print("Fail to Ping board")
             return status
@@ -141,7 +142,7 @@ def open_port(port: int, baud_rate: int) -> Messages.MessageCode:
     ser.timeout = 5
     try:
         ser.open()
-    except serial.SerialException as var : # var contains details of issue:
+    except serial.SerialException:             
         return Messages.MessageCode.BAD_COMPORT_OPEN
     ser.flushInput()
     ser.timeout = 5
@@ -158,6 +159,7 @@ def send_command(send_string: str) -> Messages.MessageCode:
     return Messages.MessageCode.OK
 
 def get_reply() -> Messages.MessageCode:
+    global reply_string
     reply_string = ser.read_until(b'\n', 50)
     if (len(reply_string) == 0):
         return Messages.MessageCode.BAD_SERIAL_PORT_READ
@@ -178,6 +180,7 @@ def do_command(cmd_string: str) -> Messages.MessageCode:
     return status
 
 def Parse_string(string_data: str) -> Messages.MessageCode:
+    global argc
     for index in range(MAX_COMMAND_PARAMETERS):
         int_parameter[index] = 0
         float_parameter[index] = 0.0
@@ -212,7 +215,6 @@ def Parse_string(string_data: str) -> Messages.MessageCode:
 
         param_type[index] = Modes.MODE_S
         Pi_the_robot.sys_print(int_parameter)
-
     return Messages.MessageCode.OK
 
 # ===========================================================================
@@ -232,7 +234,7 @@ def Execute_servo_cmd(joint: int, position: int, speed: int, group: bool) -> Mes
     if (status != Messages.MessageCode.OK):
         return status
 # select type of move command
-    if ((group == False) and (speed < Sys_values.SPEED_THRESHOLD)):
+    if ((group is False) and (speed < Sys_values.SPEED_THRESHOLD)):
         servo_cmd = ServoCommands.ABS_MOVE
     elif ((group == True) and (speed < Sys_values.SPEED_THRESHOLD)):
         servo_cmd = ServoCommands.ABS_MOVE_SYNC
@@ -252,7 +254,7 @@ def Execute_servo_cmd(joint: int, position: int, speed: int, group: bool) -> Mes
     Pi_the_robot.sys_print(status)
     return status
 
-def Mouth_on_off(mouthstate: bool, group: bool) -> Messages.MessageCode:
+def Mouth_on_off(mouth_state: bool, group: bool) -> Messages.MessageCode:
     if (group == False):
         servo_cmd = ServoCommands.ABS_MOVE
     else:
@@ -273,7 +275,7 @@ def Mouth_on_off(mouthstate: bool, group: bool) -> Messages.MessageCode:
             current_pose[Joints.MOUTH] = 45
         else:
             mouth_state = Mouth.OFF
-            current_pose[Joints.mouth] = 0
+            current_pose[Joints.MOUTH] = 0
     Pi_the_robot.sys_print(status)
     return status
 
@@ -281,7 +283,7 @@ def check_joint_data(joint: int, position: int, speed: int) -> Messages.MessageC
     if ((joint < FIRST_JOINT) or (joint > LAST_JOINT)):
         return Messages.MessageCode.BAD_JOINT_CODE
     if ((position < servo_data[joint][2]) or (position > servo_data[joint][3])):
-        return Messages.MessageCode.BAD_SERVO_POSITIONplay_TTS_string
+        return Messages.MessageCode.BAD_SERVO_POSITION
     if ((position < servo_data[joint][4]) or (position > servo_data[joint][5])):
         return Messages.MessageCode.BAD_SPEED_VALUE
     return Messages.MessageCode.OK
@@ -299,29 +301,26 @@ def execute_stepper_cmd(stepper_no, stepper_cmd, stepper_speed_profile, stepper_
 # ===========================================================================
 # Display code
 
-def set_display_form(page_index) -> Messages.MessageCode:
-    cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.SET_uLCD_FORM} {page_index}\n")
-    status =  do_command(cmd_string)
-    Pi_the_robot.sys_print(status)
-    return status
+# def set_display_form(page_index) -> Messages.MessageCode:
+#     cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.SET_uLCD_FORM} {page_index}\n")
+#     status =  do_command(cmd_string)
+#     Pi_the_robot.sys_print(status)
+#     return status
 
-def get_display_form(self) -> Messages.MessageCode:
-    cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.SET_uLCD_FORM}\n")
-    status =  do_command(cmd_string)
-    Pi_the_robot.sys_print(status)
-    return status
+# def get_display_form() -> Messages.MessageCode:
+#     cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.SET_uLCD_FORM}\n")
+#     status =  do_command(cmd_string)
+#     Pi_the_robot.sys_print(status)
+#     return status
 
-def string_update(self) -> None:
-    pass
+# def string_update() -> None:
+#     pass
 
-def read_button(button_index: int) -> Messages.MessageCode:
-    cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.READ_BUTTON} {button_index}\n")
-    status =  do_command(cmd_string)
-    Pi_the_robot.sys_print(status)
-    return status
-
-# ===========================================================================
-# Video code
+# def read_button(button_index: int) -> Messages.MessageCode:
+#     cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.READ_uLCD_BUTTON} {button_index}\n")
+#     status =  do_command(cmd_string)
+#     Pi_the_robot.sys_print(status)
+#     return status
 
 # ===========================================================================
 # run sequences of commands from a list
@@ -347,7 +346,7 @@ def run_sequence(sequence) -> Messages.MessageCode:
                     block = True
                 if (cmd_argv[1] == "f"):
                     try:
-                        file = open(cmd_argv[3], 'r')
+                        file = open(cmd_argv[3], 'r', encoding='utf-8')
                     except FileNotFoundError:
                         print('This file does not exist')
                         return Messages.MessageCode.FILE_NOT_FOUND
@@ -382,7 +381,7 @@ def run_sequence(sequence) -> Messages.MessageCode:
 
 def run_file_sequence(filename: str) -> Messages.MessageCode:
     try:
-        text_data = open(filename, 'r')
+        text_data = open(filename, 'r', encoding='utf-8')
     except FileNotFoundError:
         print(f'Cannot open file {filename}')
         return Messages.MessageCode.COMMAND_FILE_NOT_FOUND
@@ -393,4 +392,3 @@ def run_file_sequence(filename: str) -> Messages.MessageCode:
 
     status = run_sequence(cmd_list)
     Pi_the_robot.sys_print("sequence : ", filename, " status = ", status)
-
