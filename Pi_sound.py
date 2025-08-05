@@ -5,13 +5,10 @@
 import os
 import subprocess
 import time
-#import pyttsx3
+import shlex
+from playsound  import  *
 
 import Messages
-
-from playsound  import  *
-# import Command_IO
-# from Command_IO import  MessageCode
 from Globals    import  *
 from Constants  import  *
 
@@ -40,7 +37,7 @@ def play_sound_file(filename: str, block: bool) -> Messages.MessageCode:
 #     while (__engine.isBusy == True):
 #         time.sleep(0.1)
 
-def say_espeak(phrase: str, volume: int = 100) -> None:
+def say_espeak(phrase: str, volume: int = 100, say_wait: bool = False) -> None:
     """
     Uses the 'espeak-ng' command-line tool to convert text to speech.
     
@@ -55,13 +52,19 @@ def say_espeak(phrase: str, volume: int = 100) -> None:
 
     try:
         cmd = f"espeak-ng -s120 -a{volume} -ven+robosoft3 '{phrase}'"
-        py3_out = subprocess.check_output(cmd, shell=True)
-        print(f"Espeak-ng command : {cmd}")
+        if (say_wait == True):
+            subprocess.run(shlex.split(cmd), check=True)
+        else:
+            subprocess.Popen(shlex.split(cmd))
 
     except FileNotFoundError:
         print("Error: 'espeak' command not found. Please install it.")
     except subprocess.CalledProcessError as e:
-        print(f"Error during speech synthesis: {e}")
+        print(f"Error during speech synthesis: {e}")  
+
+    print(f"Espeak-ng command : {cmd}")
+    
+    
 
 def say(phrase: str, volume: int = 150) -> None:
     say_espeak(phrase, volume)

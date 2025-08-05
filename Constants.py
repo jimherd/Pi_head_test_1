@@ -32,13 +32,23 @@ class This_platform(IntEnum):
     LINUX      = 2
 
 class forms(IntEnum):
-    FORM0 = 0
-    FORM1 = 1
-    FORM2 = 2
-    FORM3 = 3
-    FORM4 = 4
-    FORM5 = 5
-    FORM6 = 6
-    FORM7 = 7
+    FORM_0 = 0
+    FORM_1 = 1
+    FORM_2 = 2
+    FORM_3 = 3
+    FORM_4 = 4
+    FORM_5 = 5
+    FORM_6 = 6
+    FORM_7 = 7
+
+class button_id(IntEnum):
+    buttton_id_0 = 0
+    buttton_id_1 = 1
+    buttton_id_2 = 2
+    buttton_id_3 = 3
+    buttton_id_4 = 4
+    buttton_id_5 = 5
+    buttton_id_6 = 6
+    buttton_id_7 = 7
 
 

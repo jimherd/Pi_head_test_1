@@ -14,6 +14,7 @@ class MessageCode(IntEnum):
     COM_PORT_OPEN_OK                 = 1
 
     OK                               = 0
+    NO_BUTTON_PRESSED                = -1
     
     LETTER_ERROR                     = -100   # rp2040 generated errors
     DOT_ERROR                        = -101

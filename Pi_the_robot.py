@@ -149,14 +149,29 @@ def run_display_test() -> Messages.MessageCode:
 
 # ===========================================================================
 def run_program() -> Messages.MessageCode:
-    status = display.set_display_form(Cnst.forms.FORM0)
+    status = display.set_display_form(Cnst.forms.FORM_0)
     if (status != Messages.MessageCode.OK): 
         return status
     # scan buttons on current form. 
     #     1. 'local index' is returned in 'int_parameters[0]'
     #     2. Press time (in units of 100mS) is returned in 'int_parameters[1]'
-    status = display.scan_uLCD_form_for_button_presses(Cnst.forms.FORM0)
+    status = display.scan_uLCD_form_for_button_presses(Cnst.forms.FORM_0)
     if (status != Messages.MessageCode.OK): 
         return status
     local_id = Cmd.int_parameter[0]
+    # press_time = Cmd.int_parameter[1]  # MAY USE IN FUTURE
+    
+    match local_id:
+        case Cnst.button_id.buttton_id_0:
+            status = display.set_display_form(Cnst.forms.FORM_0)
+            if (status != Messages.MessageCode.OK): 
+                return status
+        case Cnst.button_id.buttton_id_1:
+            status = display.set_display_form(Cnst.forms.FORM_1)
+            if (status != Messages.MessageCode.OK): 
+                return status
+        case Messages.MessageCode.NO_BUTTON_PRESSED: 
+            pass
+
+
              
