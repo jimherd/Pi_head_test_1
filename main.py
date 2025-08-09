@@ -14,7 +14,7 @@ import Pi_sound
 
 import Messages
 #from Pi_sound     import  *
-#from Constants    import  *
+#from Constants    import  *form_index : int
 #from IMX500_sys   import  *
 
 #import cv2
@@ -26,7 +26,7 @@ import Messages
 #
 def main():
     #init_sound_output()
-    IMX500_sys.imx500_init()
+    #IMX500_sys.imx500_init()
     Pi_sound.say_espeak("Hello, I am Pi the robot. I am ready to help you.")
 
     # run_detect()    # temp test
@@ -43,14 +43,15 @@ def main():
         Command_IO.Pi_head_com_port = sys.argv[1]
 
     status = Command_IO.init_sys(Command_IO.Pi_head_com_port)
+    Pi_the_robot.sys_print("Init_sys:" ,{status})
     if (status != Messages.MessageCode.OK):
-        Pi_the_robot.sys_print(status)
         Pi_the_robot.speak_message(status)
         time.sleep(5)
         return
     Pi_sound.say_espeak(Constants.Sys_strings.INTRO_STRING)
 
     Pi_the_robot.sys_print("Hello")
+    #Pi_the_robot.run_left_eye_tests()
     Pi_the_robot.run_display_test()
     Pi_the_robot.run_sys()
     

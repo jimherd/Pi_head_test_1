@@ -37,7 +37,7 @@ def play_sound_file(filename: str, block: bool) -> Messages.MessageCode:
 #     while (__engine.isBusy == True):
 #         time.sleep(0.1)
 
-def say_espeak(phrase: str, volume: int = 100, say_wait: bool = False) -> None:
+def say_espeak(phrase: str, volume: int = 100, say_wait: bool = True) -> None:
     """
     Uses the 'espeak-ng' command-line tool to convert text to speech.
     
@@ -53,9 +53,9 @@ def say_espeak(phrase: str, volume: int = 100, say_wait: bool = False) -> None:
     try:
         cmd = f"espeak-ng -s120 -a{volume} -ven+robosoft3 '{phrase}'"
         if (say_wait == True):
-            subprocess.run(shlex.split(cmd), check=True)
+            subprocess.run(shlex.split(cmd))        # wait until cmd complete
         else:
-            subprocess.Popen(shlex.split(cmd))
+            subprocess.Popen(shlex.split(cmd))      # return once cmd is started
 
     except FileNotFoundError:
         print("Error: 'espeak' command not found. Please install it.")

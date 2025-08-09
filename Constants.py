@@ -51,4 +51,16 @@ class button_id(IntEnum):
     buttton_id_6 = 6
     buttton_id_7 = 7
 
+class states(IntEnum):
+    S0 = 0      # Root form,        FORM0
+    S1 = 1      # Left eye tests,   FORM1
+    S2 = 2      # Right eye tests,  FORM2
+    S3 = 3
+    S4 = 4
+    S5 = 5
+    S6 = 6
+    S7 = 7
+    S8 = 8
+
+
 

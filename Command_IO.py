@@ -170,6 +170,7 @@ def get_reply() -> Messages.MessageCode:
 # Data is returned through global 'int_parameter[] array
 
 def do_command(cmd_string: str) -> Messages.MessageCode:
+    Pi_the_robot.sys_print("cmd =", cmd_string)
     status = send_command(cmd_string)
     if(status != Messages.MessageCode.OK):
         return status
@@ -177,6 +178,7 @@ def do_command(cmd_string: str) -> Messages.MessageCode:
     if(status != Messages.MessageCode.OK):
         return status
     status = Parse_string(reply_string)
+    Pi_the_robot.sys_print("status =", {status})
     return status
 
 def Parse_string(string_data: str) -> Messages.MessageCode:
@@ -189,7 +191,7 @@ def Parse_string(string_data: str) -> Messages.MessageCode:
     # break string into a list of strings
     string_parameters = string_data.split()
     argc = len(string_parameters)
-    Pi_the_robot.sys_print(reply_string)
+    Pi_the_robot.sys_print("reply = ",reply_string)
 
     for index in range(argc):
         flag = True
@@ -214,7 +216,7 @@ def Parse_string(string_data: str) -> Messages.MessageCode:
             continue
 
         param_type[index] = Modes.MODE_S
-        Pi_the_robot.sys_print(int_parameter)
+        print(int_parameter)
     return Messages.MessageCode.OK
 
 # ===========================================================================
@@ -223,7 +225,7 @@ def Parse_string(string_data: str) -> Messages.MessageCode:
 def ping() -> Messages.MessageCode:
     cmd_string = "ping 0 " + str(random.randint(1,98)) + "\n"
     status =  do_command(cmd_string)
-    Pi_the_robot.sys_print(status)
+    # Pi_the_robot.sys_print(status)
     return status
 
 # ===========================================================================
@@ -251,7 +253,7 @@ def Execute_servo_cmd(joint: int, position: int, speed: int, group: bool) -> Mes
     status =  do_command(cmd_string)
     if (status == Messages.MessageCode.OK):
         current_pose[joint] = position  # record new position
-    Pi_the_robot.sys_print(status)
+    # Pi_the_robot.sys_print(status)
     return status
 
 def Mouth_on_off(mouth_state: bool, group: bool) -> Messages.MessageCode:
@@ -276,7 +278,7 @@ def Mouth_on_off(mouth_state: bool, group: bool) -> Messages.MessageCode:
         else:
             mouth_state = Mouth.OFF
             current_pose[Joints.MOUTH] = 0
-    Pi_the_robot.sys_print(status)
+    # Pi_the_robot.sys_print(status)
     return status
 
 def check_joint_data(joint: int, position: int, speed: int) -> Messages.MessageCode:
@@ -295,7 +297,7 @@ def check_joint_data(joint: int, position: int, speed: int) -> Messages.MessageC
 def execute_stepper_cmd(stepper_no, stepper_cmd, stepper_speed_profile, stepper_step_value) -> Messages.MessageCode:
     cmd_string =(f"stepper {Sys_values.DEFAULT_PORT} {stepper_cmd} {stepper_no} {stepper_step_value}\n")
     status =  do_command(cmd_string)
-    Pi_the_robot.sys_print(status)
+    # Pi_the_robot.sys_print(status)
     return status
 
 # ===========================================================================
@@ -334,6 +336,8 @@ def run_sequence(sequence) -> Messages.MessageCode:
 
 # execute command
         match cmd_argv[0]:
+            case "#":     # comment
+                pass
             case "video":
                 for count in range(cmd_argv[1]):  # number of image processing cycles
                     get_detections()
@@ -368,7 +372,7 @@ def run_sequence(sequence) -> Messages.MessageCode:
                 time.sleep(delay) 
             case _:          # must be a remote command
                 cmd_string = sequence[i]  + '\n'  #   (f"{sequences[sequence_index][i]}\n")
-                Pi_the_robot.sys_print("cmd =", cmd_string)
+             #   Pi_the_robot.sys_print("cmd =", cmd_string)
                 status =  do_command(cmd_string)
                 if (status != Messages.MessageCode.OK):
                     return status

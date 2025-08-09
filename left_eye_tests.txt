@@ -1,0 +1,25 @@
+# Test LEFT eye; reset to mid position
+# 1. left/right movement
+servo 9 2 4 -25
+delay 2
+servo 9 2 4 +25
+delay 3
+servo 9 2 4 0
+# 2. up/down movement
+servo 9 2 5 -45
+delay 2
+servo 9 2 5 +45
+delay 3
+servo 9 2 5 0
+# 3.eyelid up/down movement
+servo 9 2 6 -25
+delay 2
+servo 9 2 6 +25
+delay 3
+servo 9 2 6 0
+# 4.eyebrow  movement
+servo 9 2 7 -40
+delay 2
+servo 9 2 7 +40
+delay 3
+servo 9 2 7 0
