@@ -153,12 +153,12 @@ def run_program() -> Messages.MessageCode:
     if (status != Messages.MessageCode.OK): 
         return status
     # scan buttons on current form. 
-    #     1. 'local index' is returned in 'int_parameters[0]'
-    #     2. Press time (in units of 100mS) is returned in 'int_parameters[1]'
-    status = display.scan_uLCD_form_for_button_presses(Cnst.forms.FORM_0)
+    #     1. 'local index' is returned in 'int_parameters[2]'
+    #     2. Press time (in units of 100mS) is returned in 'int_parameters[3]'
+    status = display.scan_uLCD_form_for_button_presses(Cnst.forms.FORM_0, 0)
     if (status != Messages.MessageCode.OK): 
         return status
-    local_id = Cmd.int_parameter[0]
+    local_id = Cmd.int_parameter[2]
     # press_time = Cmd.int_parameter[1]  # MAY USE IN FUTURE
     state = Cnst.forms.FORM_0
     while True:
@@ -179,7 +179,7 @@ def run_program() -> Messages.MessageCode:
                 continue  # the loop
 
     if (state == Cnst.forms.FORM_1):
-        status = display.scan_uLCD_form_for_button_presses(Cnst.forms.FORM_0)
+        status = display.scan_uLCD_form_for_button_presses(Cnst.forms.FORM_0, 0)
         if (status != Messages.MessageCode.OK): 
             return status
         local_id = Cmd.int_parameter[0]

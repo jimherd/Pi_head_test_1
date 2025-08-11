@@ -24,13 +24,11 @@ from Constants  import *
 def set_display_form(form_index: int) -> Messages.MessageCode:
     cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.SET_uLCD_FORM} {form_index}\n")
     status =  do_command(cmd_string)
-    # Pi_the_robot.sys_print(status)
     return status
 
 def get_display_form() -> Messages.MessageCode:
     cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.GET_uLCD_FORM}\n")
     status =  do_command(cmd_string)
-    # Pi_the_robot.sys_print(status)
     return status    # current form index is in 'int_parameter[0]'
 
 def set_display_contrast(contrast : int) -> Messages.MessageCode:
@@ -38,41 +36,50 @@ def set_display_contrast(contrast : int) -> Messages.MessageCode:
         return Messages.MessageCode.CONTRAST_OUTWITH_PERCENT_RANGE
     cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.SET_uLCD_CONTRAST} {contrast}\n")
     status =  do_command(cmd_string)
-    # Pi_the_robot.sys_print(status)
     return status
 
 def read_display_button(form_index : int, local_index : int) -> Messages.MessageCode:
     cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.READ_uLCD_BUTTON} {form_index} {local_index}\n")
     status =  do_command(cmd_string)
-    # Pi_the_robot.sys_print(status)
     return status    # current button value is in 'int_parameter[0]'
 
 def read_display_switch(form_index : int, local_index : int) -> Messages.MessageCode:
     cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.READ_uLCD_SWITCH} {form_index} {local_index}\n")
     status =  do_command(cmd_string)
-    # Pi_the_robot.sys_print(status)
     return status   # current switch value is in 'int_parameter[0]'
 
 def read_object(object_type : int, global_index : int) -> Messages.MessageCode:
     cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.READ_uLCD_OBJECT} {global_index} {object_type}\n")
     status =  do_command(cmd_string)
-    # Pi_the_robot.sys_print(status)
     return status   # current object value is in 'int_parameter[0]'
 
 def write_display_string(form_index : int, local_index : int, text : str) -> Messages.MessageCode:
     cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.WRITE_uLCD_STRING} {form_index} {local_index} {text}\n")
     status =  do_command(cmd_string)
-    # Pi_the_robot.sys_print(status)
     return status
 
 def write_object(object_type : int, global_index: int, value : int ) -> Messages.MessageCode:
     cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.READ_uLCD_OBJECT} {global_index} {object_type} {value}\n")
     status =  do_command(cmd_string)
-    # Pi_the_robot.sys_print(status)
     return status
 
-def scan_uLCD_form_for_button_presses(form_index : int) -> Messages.MessageCode:
+def scan_uLCD_form_for_button_presses(form_index : int, scans : int = 0) -> Messages.MessageCode:
     cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.SCAN_uLCD_BUTTON_PRESSES} {form_index}\n")
-    status =  do_command(cmd_string)
-    # Pi_the_robot.sys_print(status)
-    return status       # local index, and press length in 'int_parameter[]' array
+    match scans:
+        case 0:  # continuous  scan
+            while True:
+                status =  do_command(cmd_string)
+                if (int_parameter[2] == -1):
+                    time.sleep(0.5)
+                    continue
+                else:
+                    return status
+        case _:
+            for _ in range(scans):
+                status =  do_command(cmd_string)
+                if (int_parameter[2] == -1):
+                    time.sleep(0.5)
+                    continue
+                else:
+                    return status
+    
