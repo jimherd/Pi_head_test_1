@@ -17,6 +17,31 @@ import Constants as Cnst
 current_form = Cnst.forms.FORM_0
 press_time   = 0
 
+#
+# Dictionary to hold system test results
+#
+test_results = {
+    "left_eye" : {
+        "up_down"   : 0,
+        "left_right": 0,
+        "lid"       : 0,
+        "brow"      : 0
+    },
+    "right_eye" : {
+        "up_down"   : 0,
+        "left_right": 0,
+        "lid"       : 0,
+        "brow"      : 0
+    },
+    "head" : {
+        "mouth"     : 0,
+        "neck"      : 0,
+    },
+    "lights" : {
+        "neopixels" : 0,
+  }
+} 
+
 
 # ===========================================================================
 
@@ -192,6 +217,8 @@ def run_left_eye_tests() -> Messages.MessageCode:
         status = Cmd.run_file_sequence("left_eye_tests.txt")
         if (status != Messages.MessageCode.OK):
             break
+    # read test switches
+    test_results["left_eye"]["up_down"] = 1
     return status
 
 # ===========================================================================

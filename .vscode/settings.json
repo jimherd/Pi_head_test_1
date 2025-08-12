@@ -15,5 +15,7 @@
         "--disable=W0611",  // ignore unused import
 
         "--max-line-length=120",
-    ]
+    ],
+    "python-envs.defaultEnvManager": "ms-python.python:system",
+    "python-envs.pythonProjects": []
 }
