@@ -17,6 +17,8 @@ import Globals
 import Messages
 from Constants  import *
 
+import Command_IO as Cmd
+
 # ===========================================================================
 # Display functions
 # ===========================================================================
@@ -36,6 +38,11 @@ def set_display_contrast(contrast : int) -> Messages.MessageCode:
         return Messages.MessageCode.CONTRAST_OUTWITH_PERCENT_RANGE
     cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.SET_uLCD_CONTRAST} {contrast}\n")
     status =  do_command(cmd_string)
+    return status   # current object value is in 'int_parameter[0]'
+
+def write_display_string(form_index : int, local_index : int, text : str) -> Messages.MessageCode:
+    cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.WRITE_uLCD_STRING} {form_index} {local_index} {text}\n")
+    status =  do_command(cmd_string)
     return status
 
 def read_display_button(form_index : int, local_index : int) -> Messages.MessageCode:
@@ -53,17 +60,17 @@ def read_object(object_type : int, global_index : int) -> Messages.MessageCode:
     status =  do_command(cmd_string)
     return status   # current object value is in 'int_parameter[0]'
 
-def write_display_string(form_index : int, local_index : int, text : str) -> Messages.MessageCode:
-    cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.WRITE_uLCD_STRING} {form_index} {local_index} {text}\n")
-    status =  do_command(cmd_string)
-    return status
+# def write_display_string(form_index : int, local_index : int, text : str) -> Messages.MessageCode:
+#     cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.WRITE_uLCD_STRING} {form_index} {local_index} {text}\n")
+#     status =  do_command(cmd_string)
+#     return status
 
 def write_object(object_type : int, global_index: int, value : int ) -> Messages.MessageCode:
     cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.READ_uLCD_OBJECT} {global_index} {object_type} {value}\n")
     status =  do_command(cmd_string)
     return status
 
-def scan_uLCD_form_for_button_presses(form_index : int, scans : int = 0) -> Messages.MessageCode:
+def scan_form_for_button_presses(form_index : int, scans : int = 0) -> Messages.MessageCode:
     cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.SCAN_uLCD_BUTTON_PRESSES} {form_index}\n")
     match scans:
         case 0:  # continuous  scan
@@ -82,4 +89,10 @@ def scan_uLCD_form_for_button_presses(form_index : int, scans : int = 0) -> Mess
                     continue
                 else:
                     return status
+                
+def scan_form_switches(form_index: int) -> Messages.MessageCode:
+    cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.SCAN_uLCD_SWITCHES} {form_index}\n")
+    status = do_command(cmd_string)
+    
+    return status
     

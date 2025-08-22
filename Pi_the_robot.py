@@ -14,31 +14,32 @@ import Constants as Cnst
 # glibal variables
 # ===========================================================================
 
+op_state     = Cnst.states.STATE_F0   # system operating state machine
 current_form = Cnst.forms.FORM_0
 press_time   = 0
 
-#
+# ===========================================================================
 # Dictionary to hold system test results
 #
 test_results = {
     "left_eye" : {
-        "up_down"   : 0,
-        "left_right": 0,
-        "lid"       : 0,
-        "brow"      : 0
+        "up_down"   : Cnst.test.TEST_NOT_LOGGED,
+        "left_right": Cnst.test.TEST_NOT_LOGGED,
+        "lid"       : Cnst.test.TEST_NOT_LOGGED,
+        "brow"      : Cnst.test.TEST_NOT_LOGGED,
     },
     "right_eye" : {
-        "up_down"   : 0,
-        "left_right": 0,
-        "lid"       : 0,
-        "brow"      : 0
+        "up_down"   : Cnst.test.TEST_NOT_LOGGED,
+        "left_right": Cnst.test.TEST_NOT_LOGGED,
+        "lid"       : Cnst.test.TEST_NOT_LOGGED,
+        "brow"      : Cnst.test.TEST_NOT_LOGGED,
     },
     "head" : {
-        "mouth"     : 0,
-        "neck"      : 0,
+        "mouth"     : Cnst.test.TEST_NOT_LOGGED,
+        "neck"      : Cnst.test.TEST_NOT_LOGGED,
     },
     "lights" : {
-        "neopixels" : 0,
+        "neopixels" : Cnst.test.TEST_NOT_LOGGED,
   }
 } 
 
@@ -173,7 +174,7 @@ def run_display_test() -> Messages.MessageCode:
 
 # ===========================================================================
 def run_program() -> Messages.MessageCode:
-    global current_form, press_time
+    global current_form, press_time, op_state
 
     status = display.set_display_form(Cnst.forms.FORM_0)
     if (status != Messages.MessageCode.OK): 
@@ -181,7 +182,7 @@ def run_program() -> Messages.MessageCode:
     current_form = Cnst.forms.FORM_0
 
     # Main SYSTEM loop
-    #       1. scan buttons on current form. 
+    #       1. scan buttons on current form. local_id = Cmd.int_parameter[2]
     #       2. Use pressed button 'local index' to call form action
     #       3. repeat
     #
@@ -190,7 +191,7 @@ def run_program() -> Messages.MessageCode:
     #       b. Length of press returned in 'int_parameter[3]
 
     while True:
-        status = display.scan_uLCD_form_for_button_presses(current_form, 0)
+        status = display.scan_form_for_button_presses(current_form, 0)
         if (status != Messages.MessageCode.OK): 
             return status
         local_id = Cmd.int_parameter[2]
@@ -209,21 +210,18 @@ def run_program() -> Messages.MessageCode:
                 status = form_2_actions(local_id)
                 if status != Messages.MessageCode.OK:
                     return status
-                pass
 
 # ===========================================================================
-def run_left_eye_tests() -> Messages.MessageCode:
-    for _ in range(5):
+def run_left_eye_tests(nos_sequences: int = 1) -> Messages.MessageCode:
+    for _ in range(nos_sequences):
         status = Cmd.run_file_sequence("left_eye_tests.txt")
         if (status != Messages.MessageCode.OK):
             break
-    # read test switches
-    test_results["left_eye"]["up_down"] = 1
     return status
 
 # ===========================================================================
-def run_right_eye_tests() -> Messages.MessageCode:
-    for _ in range(5):
+def run_right_eye_tests(nos_sequences: int = 1) -> Messages.MessageCode:
+    for _ in range(nos_sequences):
         status = Cmd.run_file_sequence("right_eye_tests.txt")
         if (status != Messages.MessageCode.OK):
             return status
@@ -231,62 +229,85 @@ def run_right_eye_tests() -> Messages.MessageCode:
 
 # ===========================================================================
 def form_0_actions(local_index: int) -> Messages.MessageCode:
-    global current_form
+    global current_form, op_state
 
-    while True:
-        match local_index:
-            case Cnst.button_id.buttton_id_0:
-                status = display.set_display_form(Cnst.forms.FORM_0)
-                if (status != Messages.MessageCode.OK): 
-                    return status
-            case Cnst.button_id.buttton_id_1:
-                status = display.set_display_form(Cnst.forms.FORM_1)
-                if (status != Messages.MessageCode.OK): 
-                    return status
-                current_form = Cnst.forms.FORM_1
-            case _:
-                time.sleep(0.5)    # delay for half second
-                return Messages.MessageCode.NO_BUTTON_PRESSED
+    match local_index:
+        case Cnst.button_id.buttton_id_0:   # Run robot head program 
+            pass
+        case Cnst.button_id.buttton_id_1:   # run diagnostics
+            status = display.set_display_form(Cnst.forms.FORM_1)
+            if (status != Messages.MessageCode.OK): 
+                return status
+            current_form = Cnst.forms.FORM_1
+            op_state = Cnst.states.STATE_F1
+        case _:
+            time.sleep(0.5)    # delay for half second
+    return Messages.MessageCode.OK
 
 # ===========================================================================
 def form_1_actions(local_index: int) -> Messages.MessageCode:
     global current_form
 
-    while True:
-        match local_index:
-            case Cnst.button_id.buttton_id_0:
-                status = run_left_eye_tests() 
-            case Cnst.button_id.buttton_id_1:
-                status = display.set_display_form(Cnst.forms.FORM_2)
-                if (status != Messages.MessageCode.OK): 
-                    return status
-                current_form = Cnst.forms.FORM_1
-            case Cnst.button_id.buttton_id_2:
-                status = display.set_display_form(Cnst.forms.FORM_0)
-                if (status != Messages.MessageCode.OK): 
-                    return status
-            case _: 
-                time.sleep(0.5)    # delay for half second
-                return Messages.MessageCode.NO_BUTTON_PRESSED
+    match local_index:
+        case Cnst.button_id.buttton_id_0:   # run tests
+            status = run_left_eye_tests(1) 
+        case Cnst.button_id.buttton_id_1:   # move to next test screen
+            display.scan_form_switches(Cnst.forms.FORM_1)
+            switch_data = Cmd.int_parameter[2]
+            nos_switches = Cmd.int_parameter[3]
+        # log reults of tests based on switch values
+            test_results["left_eye"]["up_down"]     = switch_data & 0x01
+            switch_data >>= 1
+            test_results["left_eye"]["left_right"]  = switch_data & 0x01
+            switch_data >>= 1
+            test_results["left_eye"]["lid"]         = switch_data & 0x01
+            switch_data >>= 1
+            test_results["left_eye"]["brow"]        = switch_data & 0x01
+
+            status = display.set_display_form(Cnst.forms.FORM_2)
+            if (status != Messages.MessageCode.OK): 
+                return status
+            current_form = Cnst.forms.FORM_2
+        case Cnst.button_id.buttton_id_2:   # exit test system
+            status = display.set_display_form(Cnst.forms.FORM_0)
+            if (status != Messages.MessageCode.OK): 
+                return status
+            current_form = Cnst.forms.FORM_0
+        case _: 
+            time.sleep(0.5)    # delay for half second
+            return Messages.MessageCode.NO_BUTTON_PRESSED
+    return Messages.MessageCode.OK
             
 # ===========================================================================
 def form_2_actions(local_index: int) -> Messages.MessageCode:
-    global current_form
+    global current_form, test_results
 
-    while True:
-        match local_index:
-            case Cnst.button_id.buttton_id_0:
-                status = run_right_eye_tests()
-            case Cnst.button_id.buttton_id_1:
-                status = display.set_display_form(Cnst.forms.FORM_2)
-                if (status != Messages.MessageCode.OK): 
-                    return status
-                current_form = Cnst.forms.FORM_2
-            case Cnst.button_id.buttton_id_2:
-                status = display.set_display_form(Cnst.forms.FORM_0)
-                if (status != Messages.MessageCode.OK): 
-                    return status
-            case _: 
-                time.sleep(0.5)    # delay for half second
-                return Messages.MessageCode.NO_BUTTON_PRESSED
+    match local_index:
+        case Cnst.button_id.buttton_id_0:
+            status = run_right_eye_tests(1)
+        case Cnst.button_id.buttton_id_1:
+            status = display.set_display_form(Cnst.forms.FORM_2)
+            switch_data = Cmd.int_parameter[2]
+            nos_switches = Cmd.int_parameter[3]
+        # log reults of tests based on switch values
+            test_results["right_eye"]["up_down"]     = switch_data & 0x01
+            switch_data >>= 1
+            test_results["right_eye"]["left_right"]  = switch_data & 0x01
+            switch_data >>= 1
+            test_results["right_eye"]["lid"]         = switch_data & 0x01
+            switch_data >>= 1
+            test_results["right_eye"]["brow"]        = switch_data & 0x01
+
+            if (status != Messages.MessageCode.OK): 
+                return status
+            current_form = Cnst.forms.FORM_2
+        case Cnst.button_id.buttton_id_2:
+            status = display.set_display_form(Cnst.forms.FORM_0)
+            if (status != Messages.MessageCode.OK): 
+                return status
+            current_form = Cnst.forms.FORM_0
+        case _: 
+            time.sleep(0.5)    # delay for half second
+            return Messages.MessageCode.NO_BUTTON_PRESSED
+    return Messages.MessageCode.OK
     

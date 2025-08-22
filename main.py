@@ -27,6 +27,7 @@ import Messages
 def main():
     #init_sound_output()
     #IMX500_sys.imx500_init()
+    
     Pi_sound.say_espeak("Hello, I am Pi the robot. I am ready to help you.")
 
     # run_detect()    # temp test
@@ -51,9 +52,10 @@ def main():
     Pi_sound.say_espeak(Constants.Sys_strings.INTRO_STRING)
 
     Pi_the_robot.sys_print("Hello")
-    Pi_the_robot.run_left_eye_tests()
+   # Pi_the_robot.run_left_eye_tests()
     #Pi_the_robot.run_display_test()
     #Pi_the_robot.run_sys()
+    Pi_the_robot.run_program()
     
 
 if __name__ == "__main__":

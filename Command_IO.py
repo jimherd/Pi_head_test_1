@@ -70,6 +70,7 @@ class Display_commands(IntEnum):
     WRITE_uLCD_STRING         = 6
     WRITE_uLCD_OBJECT         = 7
     SCAN_uLCD_BUTTON_PRESSES  = 8
+    SCAN_uLCD_SWITCHES        = 9
 
 class Modes(IntEnum):
     MODE_U = 0
@@ -132,6 +133,7 @@ def init_sys(comport: str) -> Messages.MessageCode:
         if ( status !=  Messages.MessageCode.OK):
             Pi_the_robot.sys_print("Fail to Ping board")
             return status
+        soft_reset(10)
     # init_sound_output()
     return Messages.MessageCode.OK
 
@@ -219,6 +221,19 @@ def Parse_string(string_data: str) -> Messages.MessageCode:
         param_type[index] = Modes.MODE_S
         print(int_parameter)
     return Messages.MessageCode.OK
+
+# ===========================================================================
+# PICO microcontroller soft reset
+#
+# PICO soft reset seems to leave data in the serial input buffer
+# therefor use "reset_input buffer" to remove.
+
+def soft_reset(delay: int = 10) -> Messages.MessageCode:
+    cmd_string = "sys 0 0\n"
+    status =  do_command(cmd_string)
+    time.sleep(5)   # delay to allow PICO to restart
+    ser.reset_input_buffer()
+    return status
 
 # ===========================================================================
 # ping code
@@ -336,7 +351,7 @@ def run_sequence(sequence) -> Messages.MessageCode:
             case "#":     # comment
                 pass
             case "video":
-                for count in range(cmd_argv[1]):  # number of image processing cycles
+                for _ in range(cmd_argv[1]):  # number of image processing cycles
                     get_detections()
                     sleep(cmd_argv[2] * 0.1)    # delay between frames in units of 0.1sec
             case "speak":

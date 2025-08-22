@@ -52,15 +52,20 @@ class button_id(IntEnum):
     buttton_id_7 = 7
 
 class states(IntEnum):
-    S0 = 0      # Root form,        FORM0
-    S1 = 1      # Left eye tests,   FORM1
-    S2 = 2      # Right eye tests,  FORM2
-    S3 = 3
-    S4 = 4
-    S5 = 5
-    S6 = 6
-    S7 = 7
-    S8 = 8
+    STATE_F0 = 0      # Root form,        FORM0
+    STATE_F1 = 1      # Left eye tests,   FORM1
+    STATE_F2 = 2      # Right eye tests,  FORM2
+    STATE_F3 = 3
+    STATE_F4 = 4
+    STATE_F5 = 5
+    STATE_F6 = 6
+    STATE_F7 = 7
+    STATE_F8 = 8
+
+class test(IntEnum):
+    TEST_FAIL       = 0
+    TEST_PASS       = 1
+    TEST_NOT_LOGGED = -1
 
 
 
