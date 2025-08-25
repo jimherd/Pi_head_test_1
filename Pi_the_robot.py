@@ -318,11 +318,13 @@ def form_3_actions(local_index: int) -> Messages.MessageCode:
     match local_index:
         case Cnst.button_id.buttton_id_0: # neck test
             status = run_test("neck_test", 1)
-        case Cnst.button_id.buttton_id_1: # Neopixel test
+        case Cnst.button_id.buttton_id_1: # mouth test
+            status = run_test("mouth_test.txt", 1)
+        case Cnst.button_id.buttton_id_2: # Neopixel test
             status = run_test("neopixel_test.txt", 1)
-        case Cnst.button_id.buttton_id_2: # review results
+        case Cnst.button_id.buttton_id_3: # review results
             pass
-        case Cnst.button_id.buttton_id_3: # exit test mode
+        case Cnst.button_id.buttton_id_4: # exit test mode
             status = display.set_display_form(Cnst.forms.FORM_0)
             if (status != Messages.MessageCode.OK): 
                 return status
