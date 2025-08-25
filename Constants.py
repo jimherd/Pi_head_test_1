@@ -40,6 +40,14 @@ class forms(IntEnum):
     FORM_5 = 5
     FORM_6 = 6
     FORM_7 = 7
+    FORM_8 = 8
+    FORM_9 = 9
+    FORM_10 = 10
+    FORM_11 = 11
+    FORM_12 = 12
+    FORM_13 = 13
+    FORM_14 = 14
+    FORM_15 = 15
 
 class button_id(IntEnum):
     buttton_id_0 = 0
@@ -50,6 +58,8 @@ class button_id(IntEnum):
     buttton_id_5 = 5
     buttton_id_6 = 6
     buttton_id_7 = 7
+    buttton_id_8 = 8
+    buttton_id_9 = 9
 
 class states(IntEnum):
     STATE_F0 = 0      # Root form,        FORM0

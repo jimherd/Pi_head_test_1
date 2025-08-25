@@ -210,19 +210,19 @@ def run_program() -> Messages.MessageCode:
                 status = form_2_actions(local_id)
                 if status != Messages.MessageCode.OK:
                     return status
+            case Cnst.forms.FORM_3:                 # Test RIGHT eye FORM
+                status = form_3_actions(local_id)
+                if status != Messages.MessageCode.OK:
+                    return status
+            case Cnst.forms.FORM_4:                 # Test RIGHT eye FORM
+                status = form_4_actions(local_id)
+                if status != Messages.MessageCode.OK:
+                    return status
 
 # ===========================================================================
-def run_left_eye_tests(nos_sequences: int = 1) -> Messages.MessageCode:
+def run_test(test_file: str, nos_sequences: int = 1) -> Messages.MessageCode:
     for _ in range(nos_sequences):
-        status = Cmd.run_file_sequence("left_eye_tests.txt")
-        if (status != Messages.MessageCode.OK):
-            break
-    return status
-
-# ===========================================================================
-def run_right_eye_tests(nos_sequences: int = 1) -> Messages.MessageCode:
-    for _ in range(nos_sequences):
-        status = Cmd.run_file_sequence("right_eye_tests.txt")
+        status = Cmd.run_file_sequence(test_file)
         if (status != Messages.MessageCode.OK):
             return status
     return status
@@ -250,7 +250,7 @@ def form_1_actions(local_index: int) -> Messages.MessageCode:
 
     match local_index:
         case Cnst.button_id.buttton_id_0:   # run tests
-            status = run_left_eye_tests(1) 
+            status = run_test("left_eye_tests.txt", 1)
         case Cnst.button_id.buttton_id_1:   # move to next test screen
             display.scan_form_switches(Cnst.forms.FORM_1)
             switch_data = Cmd.int_parameter[2]
@@ -284,7 +284,7 @@ def form_2_actions(local_index: int) -> Messages.MessageCode:
 
     match local_index:
         case Cnst.button_id.buttton_id_0:
-            status = run_right_eye_tests(1)
+            status = run_test("right_eye_tests.txt", 1)
         case Cnst.button_id.buttton_id_1:
             status = display.set_display_form(Cnst.forms.FORM_2)
             switch_data = Cmd.int_parameter[2]
@@ -310,4 +310,38 @@ def form_2_actions(local_index: int) -> Messages.MessageCode:
             time.sleep(0.5)    # delay for half second
             return Messages.MessageCode.NO_BUTTON_PRESSED
     return Messages.MessageCode.OK
+
+# ===========================================================================
+def form_3_actions(local_index: int) -> Messages.MessageCode:
+    global current_form, test_results
+
+    match local_index:
+        case Cnst.button_id.buttton_id_0: # neck test
+            status = run_test("neck_test", 1)
+        case Cnst.button_id.buttton_id_1: # Neopixel test
+            status = run_test("neopixel_test.txt", 1)
+        case Cnst.button_id.buttton_id_2: # review results
+            pass
+        case Cnst.button_id.buttton_id_3: # exit test mode
+            status = display.set_display_form(Cnst.forms.FORM_0)
+            if (status != Messages.MessageCode.OK): 
+                return status
+            current_form = Cnst.forms.FORM_0
+        case _: 
+            time.sleep(0.5)    # delay for half second
+            return Messages.MessageCode.NO_BUTTON_PRESSED
+
+# ===========================================================================
+def form_4_actions(local_index: int) -> Messages.MessageCode:
+    global current_form, test_results
+
+    match local_index:
+        case Cnst.button_id.buttton_id_0:
+            status = display.set_display_form(Cnst.forms.FORM_0)
+            if (status != Messages.MessageCode.OK): 
+                return status
+            current_form = Cnst.forms.FORM_0
+        case _: 
+            time.sleep(0.5)    # delay for half second
+            return Messages.MessageCode.NO_BUTTON_PRESSED
     
