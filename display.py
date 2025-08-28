@@ -56,7 +56,7 @@ def read_display_switch(form_index : int, local_index : int) -> Messages.Message
     return status   # current switch value is in 'int_parameter[0]'
 
 def read_object(object_type : int, global_index : int) -> Messages.MessageCode:
-    cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.READ_uLCD_OBJECT} {global_index} {object_type}\n")
+    cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.READ_uLCD_OBJECT} {object_type} {global_index} \n")
     status =  do_command(cmd_string)
     return status   # current object value is in 'int_parameter[0]'
 
@@ -66,7 +66,7 @@ def read_object(object_type : int, global_index : int) -> Messages.MessageCode:
 #     return status
 
 def write_object(object_type : int, global_index: int, value : int ) -> Messages.MessageCode:
-    cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.READ_uLCD_OBJECT} {global_index} {object_type} {value}\n")
+    cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.READ_uLCD_OBJECT} {object_type} {global_index} {value}\n")
     status =  do_command(cmd_string)
     return status
 

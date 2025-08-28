@@ -43,7 +43,6 @@ test_results = {
   }
 } 
 
-
 # ===========================================================================
 
 def sys_print(*args) -> None:
@@ -268,7 +267,7 @@ def form_1_actions(local_index: int) -> Messages.MessageCode:
             if (status != Messages.MessageCode.OK): 
                 return status
             current_form = Cnst.forms.FORM_2
-        case Cnst.button_id.buttton_id_2:   # exit test system
+        case Cnst.button_id.buttton_id_2:   # exit test mode
             status = display.set_display_form(Cnst.forms.FORM_0)
             if (status != Messages.MessageCode.OK): 
                 return status
@@ -283,10 +282,10 @@ def form_2_actions(local_index: int) -> Messages.MessageCode:
     global current_form, test_results
 
     match local_index:
-        case Cnst.button_id.buttton_id_0:
+        case Cnst.button_id.buttton_id_0:       # run tests
             status = run_test("right_eye_tests.txt", 1)
-        case Cnst.button_id.buttton_id_1:
-            status = display.set_display_form(Cnst.forms.FORM_2)
+        case Cnst.button_id.buttton_id_1:   # move to next test screen
+            display.scan_form_switches(Cnst.forms.FORM_2)
             switch_data = Cmd.int_parameter[2]
             nos_switches = Cmd.int_parameter[3]
         # log reults of tests based on switch values
@@ -297,11 +296,11 @@ def form_2_actions(local_index: int) -> Messages.MessageCode:
             test_results["right_eye"]["lid"]         = switch_data & 0x01
             switch_data >>= 1
             test_results["right_eye"]["brow"]        = switch_data & 0x01
-
+            status = display.set_display_form(Cnst.forms.FORM_3)
             if (status != Messages.MessageCode.OK): 
                 return status
-            current_form = Cnst.forms.FORM_2
-        case Cnst.button_id.buttton_id_2:
+            current_form = Cnst.forms.FORM_3
+        case Cnst.button_id.buttton_id_2:    # exit test mode
             status = display.set_display_form(Cnst.forms.FORM_0)
             if (status != Messages.MessageCode.OK): 
                 return status
@@ -323,9 +322,19 @@ def form_3_actions(local_index: int) -> Messages.MessageCode:
         case Cnst.button_id.buttton_id_2: # Neopixel test
             status = run_test("neopixel_test.txt", 1)
         case Cnst.button_id.buttton_id_3: # review results
-            pass
-        case Cnst.button_id.buttton_id_4: # exit test mode
-            status = display.set_display_form(Cnst.forms.FORM_0)
+            display.scan_form_switches(Cnst.forms.FORM_2)
+            switch_data = Cmd.int_parameter[2]
+        # log reults of tests based on switch values
+            test_results["head"]["mouth"]       = switch_data & 0x01
+            switch_data >>= 1
+            test_results["head"]["neck"]        = switch_data & 0x01
+            switch_data >>= 1
+            test_results["lights"]["neopixels"] = switch_data & 0x01
+            status = display.set_display_form(Cnst.forms.FORM_3)
+            if (status != Messages.MessageCode.OK): 
+                return status
+        case Cnst.button_id.buttton_id_4: # exit to review screen
+            status = display.set_display_form(Cnst.forms.FORM_4)
             if (status != Messages.MessageCode.OK): 
                 return status
             current_form = Cnst.forms.FORM_0
@@ -337,8 +346,12 @@ def form_3_actions(local_index: int) -> Messages.MessageCode:
 def form_4_actions(local_index: int) -> Messages.MessageCode:
     global current_form, test_results
 
+    # Read test results and set LEDs
+    if (test_results["left_eye"]["up_down"] == 1):
+        pass
+
     match local_index:
-        case Cnst.button_id.buttton_id_0:
+        case Cnst.button_id.buttton_id_0: 
             status = display.set_display_form(Cnst.forms.FORM_0)
             if (status != Messages.MessageCode.OK): 
                 return status
