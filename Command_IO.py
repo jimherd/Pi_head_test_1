@@ -339,8 +339,11 @@ def execute_stepper_cmd(stepper_no, stepper_cmd, stepper_speed_profile, stepper_
 # ===========================================================================
 # run sequences of commands from a list
 #
-# check for local commands (speak, ...) before sending remote command
-# to the rp2040 MCU that controls the robot head hardware
+# There are three types of commands
+#   1. Commands to be executed on the rp2040 microcontroller (servo, display, ... etc)
+#   2. Command to be executed on the Raspberry Pi (speak,...etc)
+#   3. Command to implement looping within the sequence (label, set_count, dec_count, skip, goto)
+#
 
 def run_sequence(sequence) -> Messages.MessageCode:
     for i in range(len(sequence)):
@@ -393,6 +396,7 @@ def run_sequence(sequence) -> Messages.MessageCode:
 # ===========================================================================
 # run sequences of commands from a text file
 #
+# Convert to a list of commands
 
 def run_file_sequence(filename: str) -> Messages.MessageCode:
     try:

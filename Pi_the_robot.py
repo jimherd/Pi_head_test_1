@@ -316,7 +316,7 @@ def form_3_actions(local_index: int) -> Messages.MessageCode:
 
     match local_index:
         case Cnst.button_id.buttton_id_0: # neck test
-            status = run_test("neck_test", 1)
+            status = run_test("neck_test.txt", 1)
         case Cnst.button_id.buttton_id_1: # mouth test
             status = run_test("mouth_test.txt", 1)
         case Cnst.button_id.buttton_id_2: # Neopixel test
