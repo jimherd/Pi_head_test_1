@@ -28,6 +28,8 @@ MAX_COMMAND_PARAMETERS = 10
 READ_TIMEOUT = 4  # seconds
 MAX_COMMAND_STRING_LENGTH = 100
 MAX_REPLY_STRING_LENGTH = 100
+MAX_JUMP_VALUES = 10
+MAX_COUNTER_VALUES = 10
 
 class Joints(IntEnum):
     RIGHT_EYE_LR    = 0
@@ -110,6 +112,9 @@ float_parameter = arr.array('f', repeat(0, MAX_COMMAND_PARAMETERS))
 param_type      = arr.array('i', repeat(0, MAX_COMMAND_PARAMETERS))
 reply_string: str = ""
 reply_tmp_byte_string: str = ""
+
+jump_table       = arr.array('i', repeat(0, MAX_JUMP_VALUES))
+counters = arr.array('i', repeat(0, MAX_COUNTER_VALUES))
 
 ##########################################################################
 
@@ -342,10 +347,11 @@ def execute_stepper_cmd(stepper_no, stepper_cmd, stepper_speed_profile, stepper_
 # There are three types of commands
 #   1. Commands to be executed on the rp2040 microcontroller (servo, display, ... etc)
 #   2. Command to be executed on the Raspberry Pi (speak,...etc)
-#   3. Command to implement looping within the sequence (label, set_count, dec_count, skip, goto)
+#   3. Command to implement looping within the sequence (label, set_count, dec_count, skip, jump)
 #
 
 def run_sequence(sequence) -> Messages.MessageCode:
+    nos_commands = len(sequence)
     for i in range(len(sequence)):
         cmd_argv = sequence[i].split()
 
@@ -385,6 +391,23 @@ def run_sequence(sequence) -> Messages.MessageCode:
             case "delay":
                 delay = int(cmd_argv[1])
                 time.sleep(delay) 
+
+        # commands 'set_count', 'label', 'dec_count', 'spip', and 'jump' implement a simple looping
+        # structure in sequence files.
+
+            case "set_count":
+                counters[int(cmd_argv[1])] = int(cmd_argv[2])
+            case "label":
+                jump_table[int(cmd_argv[1])] = i + 1
+            case "dec_count":
+                counters[int(cmd_argv[1])] -= 1
+            case "skip":
+                i = i + 1
+            case "jump":
+                i = jump_table[int(cmd_argv[1])]
+
+        # All other commands are send to the rp2040 microcontroller
+
             case _:          # must be a remote command
                 cmd_string = sequence[i]  + '\n'  #   (f"{sequences[sequence_index][i]}\n")
                 status =  do_command(cmd_string)
