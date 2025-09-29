@@ -1,5 +1,8 @@
 # Test LEFT eye; reset to mid position
 # 1. left/right movement
+set_count 0 3
+label 0
+#
 servo 9 2 4 -25
 delay 2
 servo 9 2 4 +25
@@ -23,3 +26,8 @@ delay 2
 servo 9 2 7 +40
 delay 3
 servo 9 2 7 0
+#
+dec_count 0
+skip 0
+jump 0
+# exit

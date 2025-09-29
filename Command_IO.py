@@ -349,10 +349,17 @@ def execute_stepper_cmd(stepper_no, stepper_cmd, stepper_speed_profile, stepper_
 #   2. Command to be executed on the Raspberry Pi (speak,...etc)
 #   3. Command to implement looping within the sequence (label, set_count, dec_count, skip, jump)
 #
+# Note
+#       Uses a 'while' loop rateher than a 'for' loop to inerate through
+#       the sequence of command.  This is requires as the looping structure
+#       need to modify the command pointer to allow loops of commands.
+#       The 'for' iteration counter does not allow such modification.
+#
 
-def run_sequence(sequence) -> Messages.MessageCode:
-    nos_commands = len(sequence)
-    for i in range(len(sequence)):
+def run_sequence(sequence) -> Messages.MessageCode :
+
+    i = 0
+    while i < len(sequence):   # refer to 'Note' in function comments
         cmd_argv = sequence[i].split()
 
 # execute command
@@ -402,7 +409,8 @@ def run_sequence(sequence) -> Messages.MessageCode:
             case "dec_count":
                 counters[int(cmd_argv[1])] -= 1
             case "skip":
-                i = i + 1
+                if counters[int(cmd_argv[1])] == 0:
+                    i = i + 1
             case "jump":
                 i = jump_table[int(cmd_argv[1])]
 
@@ -413,7 +421,9 @@ def run_sequence(sequence) -> Messages.MessageCode:
                 status =  do_command(cmd_string)
                 if (status != Messages.MessageCode.OK):
                     return status
- # exit               
+        i = i + 1            # step onto next command
+    # end of while loop
+                  
     return Messages.MessageCode.OK
 
 # ===========================================================================
