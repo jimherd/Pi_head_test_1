@@ -1,25 +1,54 @@
-# Test RIGHT eye; reset to mid position
+# Test RIGHT eye
+# repeat each movemement 3 times
+#
 # 1. left/right movement
-servo 9 2 0 -25
+set_count 0 3
+label 0
+servo 9 0 4 -25
 delay 2
-servo 9 2 0 +25
+servo 9 0 4 +25
 delay 3
-servo 9 2 0 0
+dec_count 0
+skip 0
+jump 0
+#
 # 2. up/down movement
-servo 9 2 1 -45
+set_count 0 3
+label 0
+servo 9 0 5 -45
 delay 2
-servo 9 2 1 +45
+servo 9 0 5 +45
 delay 3
-servo 9 2 1 0
+dec_count 0
+skip 0
+jump 0
+#
 # 3.eyelid up/down movement
-servo 9 2 2 -25
+set_count 0 3
+label 0
+servo 9 0 6 -25
 delay 2
-servo 9 2 2 +25
+servo 9 0 6 +25
 delay 3
-servo 9 2 2 0
+dec_count 0
+skip 0
+jump 0
+#
 # 4.eyebrow  movement
-servo 9 3 2 -40
+set_count 0 3
+label 0
+servo 9 0 7 -40
 delay 2
-servo 9 3 2 +40
+servo 9 0 7 +40
 delay 3
-servo 9 3 2 0
+dec_count 0
+skip 0
+jump 0
+#
+# sequence complete
+# Reset to mid positions
+servo 9 0 4 0
+servo 9 0 5 0
+servo 9 0 6 0
+servo 9 0 7 0
+# exit
