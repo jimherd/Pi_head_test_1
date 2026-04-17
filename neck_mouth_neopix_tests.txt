@@ -4,7 +4,7 @@
 set_count 0 3
 label 0
 stepper 9 4 
-delay 1
+delay 2
 dec_count 0
 skip 0
 jump 0
@@ -13,7 +13,8 @@ jump 0
 servo 9 0 8 45
 delay 6
 servo 9 0 8 0
-#run neopixels
+#
+# 3. run neopixels
 set_count 0 3
 label 0
 neopixel 9 4 1
