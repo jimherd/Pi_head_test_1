@@ -318,28 +318,13 @@ def execute_stepper_cmd(stepper_no, stepper_cmd, stepper_speed_profile, stepper_
     return status
 
 # ===========================================================================
-# Display code
+# Push button code
 
-# def set_display_form(page_index) -> Messages.MessageCode:
-#     cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.SET_uLCD_FORM} {page_index}\n")
-#     status =  do_command(cmd_string)
-#     Pi_the_robot.sys_print(status)
-#     return status
-
-# def get_display_form() -> Messages.MessageCode:
-#     cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.SET_uLCD_FORM}\n")
-#     status =  do_command(cmd_string)
-#     Pi_the_robot.sys_print(status)
-#     return status
-
-# def string_update() -> None:
-#     pass
-
-# def read_button(button_index: int) -> Messages.MessageCode:
-#     cmd_string = (f"display {Sys_values.DEFAULT_PORT} {Display_commands.READ_uLCD_BUTTON} {button_index}\n")
-#     status =  do_command(cmd_string)
-#     Pi_the_robot.sys_print(status)
-#     return status
+def read_push_button(push_button_index) -> Messages.MessageCode:
+    cmd_string = (f"read_button {Sys_values.DEFAULT_PORT} {push_button_index}\n")
+    status =  do_command(cmd_string)
+    Pi_the_robot.sys_print(status)
+    return status
 
 # ===========================================================================
 # run sequences of commands from a list
